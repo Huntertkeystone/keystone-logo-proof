@@ -15,6 +15,8 @@
  *   ZAPIER_HOOK_URL       Secret. The Zap's "Webhooks by Zapier -> Catch Hook" URL
  *   TURNSTILE_SITE_KEY    public site key of the Turnstile widget
  *   TURNSTILE_SECRET_KEY  Secret. Secret key of the same widget
+ *   ADMIN_KEY             Secret, optional. Opening the page as /?admin=<ADMIN_KEY> lets Keystone
+ *                         staff send a proof without a customer signature.
  */
 
 const MAX_TOTAL_BYTES = 40 * 1048576;          // Gmail attachments: 25 MB total; the page limits logos to 15 MB
@@ -32,7 +34,8 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === "/api/config") {
       const key = String(env.TURNSTILE_SITE_KEY || "");
-      return new Response(JSON.stringify({ turnstileSiteKey: key.startsWith("PASTE_") ? "" : key }),
+      const admin = isAdminKey(url.searchParams.get("admin"), env);
+      return new Response(JSON.stringify({ turnstileSiteKey: key.startsWith("PASTE_") ? "" : key, admin }),
         { headers: { "content-type": "application/json", "cache-control": "no-store" } });
     }
     if (url.pathname === "/api/send") {
@@ -80,6 +83,13 @@ async function handleSend(request, env, url) {
     return json({ ok: false, error: "Company, customer number and name are required" }, 400);
   if (!/^\d+$/.test(m.customerNumber)) return json({ ok: false, error: "Customer number must be numbers only" }, 400);
 
+  // signature: required, unless the request came from a valid admin link
+  const adminKey = form.get("adminKey");
+  const admin = adminKey != null && isAdminKey(String(adminKey), env);
+  if (adminKey != null && !admin) return json({ ok: false, error: "This admin link isn't valid" }, 403);
+  const signed = meta.signed === true;
+  if (!signed && !admin) return json({ ok: false, error: "Sign the proof to approve it" }, 400);
+
   const proof = form.get("proof");
   const file = form.get("file");
   const sized = form.get("sized");                          // trimmed logo at the chosen size (PNG with DPI set)
@@ -108,19 +118,22 @@ async function handleSend(request, env, url) {
   };
   const lowRes = meta.lowRes === true;
   const short = meta.widthFrac && meta.heightFrac ? ` (${clean(meta.widthFrac, 20)} × ${clean(meta.heightFrac, 20)})` : "";
-  const subject = `Signed logo proof${lowRes ? " (BELOW 600 DPI)" : ""}: ${m.customerNumber} ${m.company}${short}`;
+  const kind = signed ? "Signed logo proof" : "UNSIGNED logo proof (Keystone admin)";
+  const subject = `${kind}${lowRes ? " (BELOW 600 DPI)" : ""}: ${m.customerNumber} ${m.company}${short}`;
   const rows = [
     ["Customer #", m.customerNumber], ["Company", m.company], ["Contact", m.contact],
     ["Engraved size", a.size], ["Resolution", a.dpi],
     ["Sized logo", meta.sizedPixels ? `${clean(meta.sizedPixels, 30)} px at ${Number(meta.sizedDpi) || 1200} DPI (opens at the engraved size)` : ""],
     ["Logo file", `${clean(file.name, 120)} (${(file.size / 1048576).toFixed(2)} MB) · ${a.pixels} · ${a.fileDpi}`],
-    ["Cropping", a.padding], ["Quality check", a.verdict], ["Signed", clean(meta.proofDate, 12)],
+    ["Cropping", a.padding], ["Quality check", a.verdict],
+    ["Signed", signed ? `${clean(meta.proofDate, 12)}${admin ? " (on the admin link)" : ""}` : "No customer signature. Sent by Keystone using the admin link."],
   ].filter(([, v]) => v);
   const issues = a.checks.filter(c => c.status === "note" || c.status === "fail");
   const lowResLine = `Below the 600 DPI minimum (${a.dpi} at ${a.size}). The customer was warned and chose to send it anyway. Check the file or ask for a better one before engraving.`;
   const html = `<div style="font:15px/1.45 Arial,Helvetica,sans-serif;color:#1c1f21">
 ${lowRes ? `<p style="background:#f7e1de;border-left:6px solid #a3241a;padding:10px 12px"><b style="color:#a3241a">${esc(lowResLine)}</b></p>` : ""}
-<p><b>${esc(m.contact)}</b> at <b>${esc(m.company)}</b> signed a laser engraving proof. Attached: the signed PDF, the logo resized to the engraved size, and their original file.</p>
+${signed ? "" : `<p style="background:#e8eef4;border-left:6px solid #3d5a73;padding:10px 12px"><b>Not signed by the customer.</b> This proof was sent by Keystone staff using the admin link.</p>`}
+<p><b>${esc(m.contact)}</b> at <b>${esc(m.company)}</b> ${signed ? "signed a laser engraving proof" : "sent a laser engraving proof"}. Attached: the ${signed ? "signed " : ""}proof PDF, the logo resized to the engraved size, and the original file.</p>
 <table cellpadding="6" cellspacing="0" style="border-collapse:collapse;border:1px solid #ccc">
 ${rows.map(([k, v]) => `<tr><td style="background:#f2f3f2;border:1px solid #ccc;font-weight:bold;white-space:nowrap">${esc(k)}</td><td style="border:1px solid #ccc">${esc(v)}</td></tr>`).join("\n")}
 </table>
@@ -128,7 +141,8 @@ ${issues.length ? `<p style="margin-top:16px"><b>Items to review</b></p><ul>${is
 </div>`;
   const text = [
     ...(lowRes ? [lowResLine.toUpperCase(), ""] : []),
-    `${m.contact} at ${m.company} signed a laser engraving proof. Attached: the signed PDF, the logo resized to the engraved size, and their original file.`, "",
+    ...(signed ? [] : ["NOT SIGNED BY THE CUSTOMER. Sent by Keystone staff using the admin link.", ""]),
+    `${m.contact} at ${m.company} ${signed ? "signed" : "sent"} a laser engraving proof. Attached: the ${signed ? "signed " : ""}proof PDF, the logo resized to the engraved size, and the original file.`, "",
     ...rows.map(([k, v]) => `${k}: ${v}`), "",
     issues.length ? "Items to review:\n" + issues.map(c => `- ${c.status === "fail" ? "Problem" : "Note"}: ${c.title}${c.detail ? ` (${c.detail})` : ""}`).join("\n") : "All automatic checks passed.",
   ].join("\n");
@@ -154,7 +168,8 @@ ${issues.length ? `<p style="margin-top:16px"><b>Items to review</b></p><ul>${is
     sizedUrl: link(sizedName), sizedName,
     customerNumber: m.customerNumber, company: m.company, contact: m.contact,
     size: a.size, dpi: a.dpi, verdict: a.verdict, lowRes: lowRes ? "yes" : "no",
-    fileName: clean(file.name, 120), signed: clean(meta.proofDate, 12),
+    fileName: clean(file.name, 120), signed: signed ? clean(meta.proofDate, 12) : "",
+    signedByCustomer: signed ? "yes" : "no", submittedBy: admin ? "admin" : "customer",
     notes: issues.map(c => `${c.status === "fail" ? "Problem" : "Note"}: ${c.title}`).join("\n"),
     receivedAt: new Date().toISOString(),
   };
@@ -232,8 +247,17 @@ function magicOk(b) {
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 }
-function slug(s) {
-  return String(s || "").normalize("NFKD").replace(/[^A-Za-z0-9]+/g, " ").trim().slice(0, 60);
+const SLUG_TRANSLIT = { "ø": "o", "Ø": "O", "æ": "ae", "Æ": "AE", "œ": "oe", "Œ": "OE", "ß": "ss", "ł": "l", "Ł": "L", "đ": "d", "Đ": "D", "ð": "d", "Ð": "D", "þ": "th", "Þ": "Th", "ı": "i", "&": " and " };
+function slug(s) {                                          // filename-safe: letters, digits, spaces
+  const t = [...String(s || "")].map(ch => SLUG_TRANSLIT[ch] ?? ch).join("");
+  return t.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z0-9]+/g, " ").trim().slice(0, 60).trim();
+}
+function isAdminKey(given, env) {                           // constant-time compare against the ADMIN_KEY secret
+  const want = String(env.ADMIN_KEY || "");
+  if (!given || want.length < 12) return false;
+  const a = new TextEncoder().encode(String(given)), b = new TextEncoder().encode(want);
+  if (a.byteLength !== b.byteLength) return false;
+  return crypto.subtle.timingSafeEqual(a, b);
 }
 function asciiName(s) {
   return String(s || "file").replace(/[^\x20-\x7e]/g, "_").replace(/["\\]/g, "_").slice(0, 150);

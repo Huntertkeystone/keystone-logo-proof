@@ -55,6 +55,20 @@ Other fields you can map: proofName, sizedName, logoName, customerNumber, compan
 (yes/no), notes, fileName, signed, receivedAt, text (plain-text body). Low-resolution sends
 have "(BELOW 600 DPI)" in the subject.
 
+### 5b. Admin link (optional)
+Worker -> Settings -> Variables and Secrets -> Add `ADMIN_KEY`, type **Secret**, value = a long
+random string (at least 12 characters; 20+ is better). Then staff open:
+
+`https://keystone-logo-proof.<you>.workers.dev/?admin=<ADMIN_KEY>`
+
+An "Admin: signature optional" tag appears and the proof can be sent without a signature (the
+customer can still sign if they're there). The Worker checks the key itself, so a wrong or
+missing key means a signature is required. Unsigned admin sends arrive as
+"UNSIGNED logo proof (Keystone admin): ..." with a note at the top, and the PDF footer says it was
+sent without a customer signature. Zapier also gets `signedByCustomer` (yes/no) and
+`submittedBy` (customer/admin). Don't share the admin link with customers; change `ADMIN_KEY` to
+revoke it.
+
 ### 6. Link it
 Link to the workers.dev address from keystonewood.com/laser-engraving. (A nicer address
 like logoproof.keystonewood.com needs keystonewood.com's DNS in Cloudflare; if you move it
@@ -86,6 +100,14 @@ set up", "couldn't be passed to Keystone"). Details are in the Worker's **Logs**
    never see the proof sheet; it's built in the background and only goes to Keystone.
    Closing the "Sent to Keystone" message clears the page (file, fields, signature, size)
    and returns to step 1 for the next logo.
+
+## Names and special characters
+
+Company and name can contain any characters. The email shows them exactly as typed (HTML is
+escaped). The proof PDF uses the standard Times font, which only covers Western European
+characters, so others are swapped for the plain letter (Ł -> L, ź -> z), emoji are dropped and
+anything else (e.g. Japanese) shows as "?". Long text shrinks to fit, then ends in "…".
+Attachment filenames keep letters and digits only (ø -> o, ß -> ss, & -> and).
 
 ## Phones and tablets
 
