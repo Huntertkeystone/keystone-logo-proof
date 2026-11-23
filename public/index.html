@@ -454,6 +454,7 @@ dialog h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
 const CONFIG = {
   minDpi: 600,              // minimum acceptable at 100% size (keystonewood.com/laser-engraving)
   idealDpi: 1200,           // preferred
+  exportDpi: 1200,          // the sized logo sent to Keystone is resampled to exactly this DPI at the chosen size
   maxWidthIn: 6,            // slider max (also capped so height stays under maxHeightIn)
   maxHeightIn: 1.75,
   minWidthIn: 0.5,          // slider min
@@ -529,7 +530,7 @@ const S = {
   aspect: 1, widthIn: null, sizeSource: "",
   engraveBlob: null, engraveUrl: null,
   boxH: CONFIG.drawerHeightIn,
-  wood: "maple", view: "side", showDims: true,
+  wood: "maple", view: "side",
   checks: [], verdict: "idle",
   sig: { drawn: false },
 };
@@ -898,6 +899,39 @@ async function makeEngravePng(a) {
   ctx.putImageData(out, 0, 0);
   return await new Promise(res => c.toBlob(res, "image/png"));
 }
+/* ---------- production copy: trimmed logo, resampled to the chosen size at CONFIG.exportDpi ----------
+   Grayscale on white (what the laser burns: black = full burn), saved as PNG with the DPI
+   written into the file, so design / laser software opens it at the exact engraved size. */
+async function makeSizedPng() {
+  const a = S.a, dpi = CONFIG.exportDpi;
+  const W = Math.max(1, Math.round(S.widthIn * dpi)), H = Math.max(1, Math.round(heightIn() * dpi));
+  const src = document.createElement("canvas"); src.width = a.tw; src.height = a.th;
+  const sg = src.getContext("2d"), im = sg.createImageData(a.tw, a.th), d = im.data;
+  for (let y = 0; y < a.th; y++) {
+    const o = (a.y0 + y) * a.w + a.x0;
+    for (let x = 0, p = y * a.tw * 4; x < a.tw; x++, p += 4) { const v = 255 - a.ink[o + x]; d[p] = d[p + 1] = d[p + 2] = v; d[p + 3] = 255; }
+  }
+  sg.putImageData(im, 0, 0);
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  const g = c.getContext("2d");
+  g.fillStyle = "#fff"; g.fillRect(0, 0, W, H);
+  g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high";
+  g.drawImage(src, 0, 0, W, H);
+  const png = await new Promise(res => c.toBlob(res, "image/png"));
+  return { blob: await pngWithDpi(png, dpi), w: W, h: H, dpi };
+}
+const CRC_TABLE = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(bytes) { let c = 0xFFFFFFFF; for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+async function pngWithDpi(blob, dpi) {                   // insert a pHYs chunk (pixels per meter) right after IHDR
+  const b = new Uint8Array(await blob.arrayBuffer());
+  const ihdrEnd = 8 + 4 + 4 + 13 + 4;
+  const ppm = Math.round(dpi / 0.0254);
+  const chunk = new Uint8Array(21), dv = new DataView(chunk.buffer);
+  dv.setUint32(0, 9); chunk.set([0x70, 0x48, 0x59, 0x73], 4);          // "pHYs"
+  dv.setUint32(8, ppm); dv.setUint32(12, ppm); chunk[16] = 1;           // unit: meter
+  dv.setUint32(17, crc32(chunk.subarray(4, 17)));
+  return new Blob([b.subarray(0, ihdrEnd), chunk, b.subarray(ihdrEnd)], { type: "image/png" });
+}
 async function drawThumb() {
   const fig = $("#thumbFig");
   if (!S.dec || !S.a || S.a.blank) { fig.hidden = true; return; }
@@ -1247,7 +1281,7 @@ function paintSide() {
     tails += `<path d="M${front} ${y - r} L${front + tl} ${y - t} L${front + tl} ${y + t} L${front} ${y + r}"/>`;
     if (y - t < gy + CONFIG.grooveIn && y + t > gy) grooveX2 = front + tl;   // only happens with anchor "top"
   }
-  let dims = "", woodDims = "", warn = "", placeholder = "";
+  let dims = "", warn = "", placeholder = "";
   if (hasLogo()) {
     const w = S.widthIn, h = heightIn();
     const lx = front - CONFIG.diagram.fromFrontIn - w, ly = top + CONFIG.diagram.fromTopIn, dy = top - 0.62;
@@ -1257,11 +1291,6 @@ function paintSide() {
       <line x1="${front + 0.44}" y1="${top}" x2="${front + 0.82}" y2="${top}"/><line x1="${front + 0.44}" y1="${ly}" x2="${front + 0.82}" y2="${ly}"/>
       <line x1="${front + 0.7}" y1="${top}" x2="${front + 0.7}" y2="${ly}"/>
       <text x="${front + 0.76}" y="${(top + ly) / 2 + fs * 0.35}">1/2"</text>`;
-    if (S.showDims && ly + h + 0.42 < gy) {
-      const by = ly + h + 0.16;
-      woodDims = `${tick(lx, by - 0.07, by + 0.07)}${tick(lx + w, by - 0.07, by + 0.07)}<line x1="${lx}" y1="${by}" x2="${lx + w}" y2="${by}"/>
-        <text x="${lx + w / 2}" y="${by + fs + 0.02}" text-anchor="middle">${frac(w)} × ${frac(h)}</text>`;
-    }
     if (ly + h > gy - 1 / 16) warn = `<rect x="${lx - 0.05}" y="${ly - 0.05}" width="${w + 0.1}" height="${h + 0.1}" fill="none" stroke="#b3261e" stroke-width="2" stroke-dasharray="6 4"/>
         <text x="${xs + 0.25}" y="${top + 0.35}" fill="#b3261e" font-weight="700">Too tall for a ${D}" side</text>`;
   } else {
@@ -1280,7 +1309,6 @@ function paintSide() {
       <g stroke="#3b2a1a" stroke-width="1"><line x1="${xs}" y1="${gy}" x2="${grooveX2}" y2="${gy}"/><line x1="${xs}" y1="${gy + CONFIG.grooveIn}" x2="${grooveX2}" y2="${gy + CONFIG.grooveIn}"/></g>
       <g stroke="currentColor" fill="currentColor" stroke-width="1"><line x1="${front - L + 0.1}" y1="${top - 0.08}" x2="${front}" y2="${top - 0.08}"/>${ruler}${dims}</g>
       <text x="${front - L + 0.1}" y="${top - 0.3 - fs * 1.1}" fill="currentColor" font-size="${fs * 0.85}">ruler: inches from the front of the drawer</text>
-      <g stroke="${ink}" fill="${ink}" stroke-width="1">${woodDims}</g>
       ${placeholder}${warn}
       <text x="${xs + 0.2}" y="${top + D - 0.12}" fill="${ink}" font-size="${fs * 0.85}" opacity=".75">bottom groove</text>
       <text x="${front + 0.25}" y="${top + D + 0.25}" text-anchor="middle" fill="currentColor" font-size="${fs * 0.85}">front</text>
@@ -1835,7 +1863,8 @@ $("#sendForm").addEventListener("submit", async e => {
   const btn = $("#sendBtn"); btn.disabled = true; btn.textContent = "Sending…";
   try {
     const pdf = await buildPdf();
-    if (pdf.size + S.file.size > 18 * 1048576) throw new Error("the proof and logo file together are too large to email");
+    const sized = await makeSizedPng();
+    if (pdf.size + S.file.size + sized.blob.size > 24 * 1048576) throw new Error("the proof and logo files together are too large to email");
     const fd = new FormData(form);
     const meta = {
       company: fd.get("company"), customerNumber: fd.get("customerNumber"), contact: fd.get("contact"),
@@ -1849,11 +1878,13 @@ $("#sendForm").addEventListener("submit", async e => {
       widthFrac: frac(S.widthIn), heightFrac: frac(heightIn()),
       effectiveDpi: S.pdf ? null : Math.round(effDpi()), vector: S.pdf ? !S.pdf.hasImage : false,
       verdict: S.verdict, lowRes: !!S.lowRes, checks: S.checks, proofDate: todayStr(),
+      sizedPixels: `${sized.w} × ${sized.h}`, sizedDpi: sized.dpi,
     };
     const body = new FormData();
     body.append("meta", JSON.stringify(meta));
     body.append("proof", pdf, pdfName());
     body.append("file", S.file, S.file.name);
+    body.append("sized", sized.blob, "sized.png");
     body.append("turnstileToken", TS.token);
     const r = await fetch(form.action, { method: "POST", body });
     const j = await r.json().catch(() => ({}));

@@ -17,7 +17,7 @@
     // Secrets go in the Worker's Settings -> Variables and Secrets (type: Secret), never here:
     //   TURNSTILE_SECRET_KEY  - the widget's secret key
     //   ZAPIER_HOOK_URL       - the Zap's "Catch Hook" URL
-    "TURNSTILE_SITE_KEY": "0x4AAAAAAGOyrnJepWB3WIVX"
+    "TURNSTILE_SITE_KEY": "PASTE_YOUR_TURNSTILE_SITE_KEY"
   },
   "observability": { "enabled": true }
 }

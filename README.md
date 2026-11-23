@@ -44,10 +44,14 @@ Worker -> **Settings -> Variables and Secrets -> Add**: `TURNSTILE_SECRET_KEY`, 
    - To: `info@keystonewood.com` (or whoever)
    - Subject: `subject`
    - Body Type: **HTML**, Body: `html`
-   - Attachments: `proofUrl` and `logoUrl` (Gmail fetches the files from those links)
+   - Attachments: `proofUrl`, `sizedUrl` and `logoUrl` (Gmail fetches the files from those links)
+     - `proofUrl`: the signed proof PDF
+     - `sizedUrl`: the logo trimmed and resized to the engraved size, grayscale PNG at
+       1200 DPI, so it opens at the exact size in laser/design software (`CONFIG.exportDpi`)
+     - `logoUrl`: the customer's original file, untouched
 5. Test the action, check the inbox, then **Publish** the Zap.
 
-Other fields you can map: customerNumber, company, contact, size, dpi, verdict, lowRes
+Other fields you can map: proofName, sizedName, logoName, customerNumber, company, contact, size, dpi, verdict, lowRes
 (yes/no), notes, fileName, signed, receivedAt, text (plain-text body). Low-resolution sends
 have "(BELOW 600 DPI)" in the subject.
 

@@ -5,7 +5,7 @@
  * This Worker handles:
  *   GET  /api/config         public settings for the page (Turnstile site key)
  *   POST /api/send           Turnstile check -> files to R2 (temporary) -> webhook to Zapier
- *   GET  /files/<id>/<name>  lets the Zap download the signed PDF and logo as email attachments
+ *   GET  /files/<id>/<name>  lets the Zap download the attachments: signed PDF, sized logo, original logo
  *
  * Files are kept only long enough for Zapier to attach them. Add an R2 lifecycle rule on the
  * bucket to delete objects after a few days (see README).
@@ -82,9 +82,13 @@ async function handleSend(request, env, url) {
 
   const proof = form.get("proof");
   const file = form.get("file");
+  const sized = form.get("sized");                          // trimmed logo at the chosen size (PNG with DPI set)
   if (!(proof instanceof File) || !proof.size) return json({ ok: false, error: "No signed proof received" }, 400);
   if (!(file instanceof File) || !file.size) return json({ ok: false, error: "No logo file received" }, 400);
-  if (proof.size + file.size > MAX_TOTAL_BYTES) return json({ ok: false, error: "Files are too large" }, 413);
+  if (!(sized instanceof File) || !sized.size) return json({ ok: false, error: "No sized logo received" }, 400);
+  if (proof.size + file.size + sized.size > MAX_TOTAL_BYTES) return json({ ok: false, error: "Files are too large" }, 413);
+  const sizedHead = new Uint8Array(await sized.slice(0, 8).arrayBuffer());
+  if (!(sizedHead[0] === 0x89 && sizedHead[1] === 0x50 && sizedHead[2] === 0x4e && sizedHead[3] === 0x47)) return json({ ok: false, error: "Sized logo isn't a PNG" }, 415);
 
   const proofHead = new Uint8Array(await proof.slice(0, 5).arrayBuffer());
   if (new TextDecoder().decode(proofHead) !== "%PDF-") return json({ ok: false, error: "Proof isn't a PDF" }, 415);
@@ -108,6 +112,7 @@ async function handleSend(request, env, url) {
   const rows = [
     ["Customer #", m.customerNumber], ["Company", m.company], ["Contact", m.contact],
     ["Engraved size", a.size], ["Resolution", a.dpi],
+    ["Sized logo", meta.sizedPixels ? `${clean(meta.sizedPixels, 30)} px at ${Number(meta.sizedDpi) || 1200} DPI (opens at the engraved size)` : ""],
     ["Logo file", `${clean(file.name, 120)} (${(file.size / 1048576).toFixed(2)} MB) · ${a.pixels} · ${a.fileDpi}`],
     ["Cropping", a.padding], ["Quality check", a.verdict], ["Signed", clean(meta.proofDate, 12)],
   ].filter(([, v]) => v);
@@ -115,7 +120,7 @@ async function handleSend(request, env, url) {
   const lowResLine = `Below the 600 DPI minimum (${a.dpi} at ${a.size}). The customer was warned and chose to send it anyway. Check the file or ask for a better one before engraving.`;
   const html = `<div style="font:15px/1.45 Arial,Helvetica,sans-serif;color:#1c1f21">
 ${lowRes ? `<p style="background:#f7e1de;border-left:6px solid #a3241a;padding:10px 12px"><b style="color:#a3241a">${esc(lowResLine)}</b></p>` : ""}
-<p><b>${esc(m.contact)}</b> at <b>${esc(m.company)}</b> signed a laser engraving proof. The signed PDF and their original logo file are attached.</p>
+<p><b>${esc(m.contact)}</b> at <b>${esc(m.company)}</b> signed a laser engraving proof. Attached: the signed PDF, the logo resized to the engraved size, and their original file.</p>
 <table cellpadding="6" cellspacing="0" style="border-collapse:collapse;border:1px solid #ccc">
 ${rows.map(([k, v]) => `<tr><td style="background:#f2f3f2;border:1px solid #ccc;font-weight:bold;white-space:nowrap">${esc(k)}</td><td style="border:1px solid #ccc">${esc(v)}</td></tr>`).join("\n")}
 </table>
@@ -123,7 +128,7 @@ ${issues.length ? `<p style="margin-top:16px"><b>Items to review</b></p><ul>${is
 </div>`;
   const text = [
     ...(lowRes ? [lowResLine.toUpperCase(), ""] : []),
-    `${m.contact} at ${m.company} signed a laser engraving proof. The signed PDF and original logo file are attached.`, "",
+    `${m.contact} at ${m.company} signed a laser engraving proof. Attached: the signed PDF, the logo resized to the engraved size, and their original file.`, "",
     ...rows.map(([k, v]) => `${k}: ${v}`), "",
     issues.length ? "Items to review:\n" + issues.map(c => `- ${c.status === "fail" ? "Problem" : "Note"}: ${c.title}${c.detail ? ` (${c.detail})` : ""}`).join("\n") : "All automatic checks passed.",
   ].join("\n");
@@ -133,9 +138,12 @@ ${issues.length ? `<p style="margin-top:16px"><b>Items to review</b></p><ul>${is
   const base = slug(`${m.customerNumber} ${m.company}`) || "customer";
   const stamp = new Date().toISOString().slice(0, 10);
   const proofName = `Logo proof - ${base} - ${stamp}.pdf`;
-  const logoName = `Logo - ${base}.${ext}`;
+  const logoName = `Logo original - ${base}.${ext}`;
+  const sizeTag = meta.widthIn && meta.heightIn ? `${+Number(meta.widthIn).toFixed(3)} x ${+Number(meta.heightIn).toFixed(3)} in` : "sized";
+  const sizedName = `Logo ${sizeTag} - ${base}.png`;
   await env.PROOF_FILES.put(`${id}/${proofName}`, proof, { httpMetadata: { contentType: "application/pdf" } });
   await env.PROOF_FILES.put(`${id}/${logoName}`, file, { httpMetadata: { contentType: CONTENT_TYPES[ext] || "application/octet-stream" } });
+  await env.PROOF_FILES.put(`${id}/${sizedName}`, sized, { httpMetadata: { contentType: "image/png" } });
   const link = name => `${url.origin}/files/${id}/${encodeURIComponent(name)}`;
 
   // ---- hand off to Zapier (flat fields so they're easy to map in the Zap)
@@ -143,6 +151,7 @@ ${issues.length ? `<p style="margin-top:16px"><b>Items to review</b></p><ul>${is
     subject, html, text,
     proofUrl: link(proofName), proofName,
     logoUrl: link(logoName), logoName,
+    sizedUrl: link(sizedName), sizedName,
     customerNumber: m.customerNumber, company: m.company, contact: m.contact,
     size: a.size, dpi: a.dpi, verdict: a.verdict, lowRes: lowRes ? "yes" : "no",
     fileName: clean(file.name, 120), signed: clean(meta.proofDate, 12),
@@ -156,7 +165,7 @@ ${issues.length ? `<p style="margin-top:16px"><b>Items to review</b></p><ul>${is
     if (!ok) console.error("zapier responded", r.status, await r.text().catch(() => ""));
   } catch (err) { console.error("zapier unreachable", err?.message || err); }
   if (!ok) {
-    await env.PROOF_FILES.delete([`${id}/${proofName}`, `${id}/${logoName}`]).catch(() => {});
+    await env.PROOF_FILES.delete([`${id}/${proofName}`, `${id}/${logoName}`, `${id}/${sizedName}`]).catch(() => {});
     return json({ ok: false, error: "The proof couldn't be passed to Keystone" }, 502);
   }
   return json({ ok: true });
