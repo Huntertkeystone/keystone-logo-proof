@@ -100,6 +100,7 @@ a { color: inherit; text-underline-offset: 0.15em; }
   margin: 0 0 0.75rem; font-size: 1.0625rem; font-weight: 650; font-stretch: 85%;
   display: flex; align-items: baseline; gap: 0.5rem;
 }
+.step > h2:focus { outline: none; }
 .step > h2 .n {
   display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; flex: none;
   border-radius: 50%; border: 1.5px solid currentColor; font-size: 0.8125rem; font-weight: 700;
@@ -329,7 +330,7 @@ dialog h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
   <section class="panel" aria-label="Logo file, checks and approval">
 
     <section class="step" aria-labelledby="s1">
-      <h2 id="s1"><span class="n" aria-hidden="true">1</span> Add your logo file</h2>
+      <h2 id="s1" tabindex="-1"><span class="n" aria-hidden="true">1</span> Add your logo file</h2>
       <input type="file" id="file" class="visually-hidden"
              accept=".png,.jpg,.jpeg,.tif,.tiff,.pdf,.eps,.ai,image/png,image/jpeg,image/tiff,application/pdf,application/postscript">
       <label for="file" class="drop" id="drop">
@@ -441,6 +442,7 @@ dialog h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
 <dialog id="sentDialog" aria-labelledby="sentTitle">
   <h2 id="sentTitle">Sent to Keystone</h2>
   <p>Your signed approval and logo file are on their way to Keystone Customer Service. They’ll review the file and contact you if anything needs to change.</p>
+  <p class="hint">Closing this clears the page so you can send another logo.</p>
   <form method="dialog" class="actions"><button class="primary">Done</button></form>
 </dialog>
 
@@ -1787,6 +1789,27 @@ function resetTurnstile() {
   if (TS.widget !== null && window.turnstile) { try { turnstile.reset(TS.widget); } catch {} }
 }
 
+/* ---------- start over after a successful send ---------- */
+function resetAll() {
+  if (S.engraveUrl) URL.revokeObjectURL(S.engraveUrl);
+  Object.assign(S, { file: null, kind: null, fileDpi: null, srcW: 0, srcH: 0, scale: 1, dec: null, a: null, pdf: null,
+    widthIn: null, sizeSource: "", engraveBlob: null, engraveUrl: null, checks: [], verdict: "idle", blocked: false, lowRes: false });
+  toneCache = { key: null };
+  $("#file").value = "";
+  $("#sendForm").reset();                                     // company, customer number, name
+  $("#facts").hidden = true; $("#thumbFig").hidden = true;
+  $("#keepMarksRow").hidden = true; $("#keepMarks").checked = false;
+  $("#sendErr").textContent = ""; $("#sendWarn").hidden = true; busy("");
+  strokesN = []; sigRef = null; S.sig.drawn = false; redrawPad(); pad.removeAttribute("aria-invalid");
+  $("#sendBtn").textContent = sendLabel();
+  renderChecks(); setupSlider(); renderDrawer();
+  resetTurnstile();
+  panelEl.scrollTop = 0;
+  window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  $("#s1").focus({ preventScroll: true });
+}
+$("#sentDialog").addEventListener("close", () => { if (S.justSent) { S.justSent = false; resetAll(); } });
+
 /* ---------- send ---------- */
 const sendLabel = () => (S.lowRes && !S.blocked ? "Approve and send anyway" : "Approve and send");
 $("#sendForm").addEventListener("submit", async e => {
@@ -1836,6 +1859,7 @@ $("#sendForm").addEventListener("submit", async e => {
     const j = await r.json().catch(() => ({}));
     if (!r.ok || !j.ok) throw new Error(j.error || `server responded ${r.status}`);
     resetTurnstile();
+    S.justSent = true;                                       // the page resets when this message is closed
     $("#sentDialog").showModal();
     btn.textContent = "Sent";
   } catch (ex) {

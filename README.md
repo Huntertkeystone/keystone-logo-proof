@@ -80,6 +80,8 @@ set up", "couldn't be passed to Keystone"). Details are in the Worker's **Logs**
    warning but can still send ("Approve and send anyway"); the email subject then says
    "(BELOW 600 DPI)" with a red note at the top. Customers
    never see the proof sheet; it's built in the background and only goes to Keystone.
+   Closing the "Sent to Keystone" message clears the page (file, fields, signature, size)
+   and returns to step 1 for the next logo.
 
 ## Phones and tablets
 
