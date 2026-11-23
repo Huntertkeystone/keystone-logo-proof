@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "keystone-logo-proof",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-10-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  // Temporary home for the signed PDF + logo until Zapier attaches them to the email.
+  // Create this bucket in R2 first, with a lifecycle rule that deletes objects after a few days.
+  "r2_buckets": [
+    { "binding": "PROOF_FILES", "bucket_name": "keystone-logo-proof-files" }
+  ],
+  "vars": {
+    // Cloudflare Turnstile (dashboard -> Turnstile -> Add widget). The site key is public.
+    // Secrets go in the Worker's Settings -> Variables and Secrets (type: Secret), never here:
+    //   TURNSTILE_SECRET_KEY  - the widget's secret key
+    //   ZAPIER_HOOK_URL       - the Zap's "Catch Hook" URL
+    "TURNSTILE_SITE_KEY": "PASTE_YOUR_TURNSTILE_SITE_KEY"
+  },
+  "observability": { "enabled": true }
+}

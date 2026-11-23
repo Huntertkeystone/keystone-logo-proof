@@ -1,0 +1,1852 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo Engraving Proof · Keystone Wood Specialties</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪵</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+   Keystone Wood Specialties — Logo Engraving Proof
+   Edit CONFIG in the script at the bottom for limits and thresholds.
+   ========================================================================= */
+:root {
+  color-scheme: light;
+  --desk: #d9ddd9;
+  --panel: #ffffff;
+  --ink: #1c1f21;
+  --muted: #545b60;
+  --line: #b5bbb7;
+  --field: #767c80;
+  --burn: #6a3416;
+  --burn-soft: #f3e7dd;
+  --pass: #22663a;
+  --note: #855600;
+  --fail: #a3241a;
+  --info: #3d5a73;
+  --pass-bg: #e3f0e6;
+  --note-bg: #f8eed6;
+  --fail-bg: #f7e1de;
+  --ui: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --cal: 1;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --desk: #1d2023;
+    --panel: #2a2e31;
+    --ink: #eceeec;
+    --muted: #a9afb3;
+    --line: #474d51;
+    --field: #8d9498;
+    --burn: #e0a878;
+    --burn-soft: #3a2d24;
+    --pass: #7fcf96;
+    --note: #e9b85a;
+    --fail: #f08d82;
+    --info: #9cc0dd;
+    --pass-bg: #213428;
+    --note-bg: #3a3020;
+    --fail-bg: #3d2523;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--ui);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--desk);
+  accent-color: var(--burn);
+}
+a { color: inherit; text-underline-offset: 0.15em; }
+:focus-visible { outline: 3px solid var(--burn); outline-offset: 2px; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ---------- site header ---------- */
+.site-head {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  padding: 0.75rem clamp(1rem, 3vw, 2rem);
+  background: var(--panel);
+  border-block-end: 1px solid var(--line);
+}
+.site-head img { height: 2.25rem; width: auto; }
+@media (prefers-color-scheme: dark) { .site-head img { filter: invert(1) hue-rotate(180deg); } }
+.site-head h1 { margin: 0; font-size: 1.25rem; font-weight: 650; font-stretch: 85%; }
+.site-head p { margin: 0 0 0 auto; color: var(--muted); font-size: 0.9375rem; }
+
+/* ---------- layout ---------- */
+.layout { display: grid; grid-template-columns: minmax(20rem, 26rem) minmax(0, 1fr); align-items: start; }
+@media (max-width: 960px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.panel {
+  background: var(--panel);
+  border-inline-end: 1px solid var(--line);
+  padding: 1.25rem clamp(1rem, 3vw, 1.5rem) 2rem;
+  position: sticky; top: 0; max-height: 100vh; overflow-y: auto;
+}
+@media (max-width: 960px) { .panel { position: static; max-height: none; border-inline-end: 0; border-block-end: 1px solid var(--line); } }
+
+.step { padding-block: 1.25rem; border-block-start: 1px solid var(--line); }
+.step:first-child { border-block-start: 0; padding-block-start: 0.25rem; }
+.step > h2, .stage-head h2 {
+  margin: 0 0 0.75rem; font-size: 1.0625rem; font-weight: 650; font-stretch: 85%;
+  display: flex; align-items: baseline; gap: 0.5rem;
+}
+.step > h2 .n {
+  display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; flex: none;
+  border-radius: 50%; border: 1.5px solid currentColor; font-size: 0.8125rem; font-weight: 700;
+}
+.hint { color: var(--muted); font-size: 0.875rem; margin: 0.25rem 0 0; }
+
+/* ---------- drop zone + crop thumbnail ---------- */
+.drop {
+  display: grid; gap: 0.25rem; justify-items: center; text-align: center;
+  padding: 1.5rem 1rem; border: 2px dashed var(--field); border-radius: 0.5rem;
+  cursor: pointer; transition: background-color .15s, border-color .15s;
+}
+.drop:hover, .drop.is-over { background: var(--burn-soft); border-color: var(--burn); }
+#file:focus-visible + .drop { outline: 3px solid var(--burn); outline-offset: 2px; }
+.drop strong { font-size: 1.0625rem; font-weight: 600; }
+.drop span { color: var(--muted); font-size: 0.875rem; }
+.thumb { margin: 0.875rem 0 0; }
+.thumb canvas { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; }
+.thumb figcaption { color: var(--muted); font-size: 0.8125rem; margin-block-start: 0.35rem; }
+.facts { margin: 0.75rem 0 0; display: grid; grid-template-columns: auto 1fr; gap: 0.125rem 0.75rem; font-size: 0.875rem; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+/* ---------- fields ---------- */
+.field { display: flex; flex-direction: column; gap: 0.25rem; margin-block-end: 0.875rem; }
+.field > label, .field > .label { font-weight: 550; font-size: 0.9375rem; }
+.req { color: var(--fail); }
+input[type="text"], input[type="email"], input[type="tel"], textarea {
+  font: inherit; font-size: max(1rem, 1em);
+  width: 100%; min-height: 2.75rem; padding: 0.5rem 0.65rem;
+  color: var(--ink); background: var(--panel);
+  border: 1px solid var(--field); border-radius: 0.375rem;
+}
+textarea { min-height: 4.5rem; resize: vertical; }
+input:user-invalid, textarea:user-invalid { border-color: var(--fail); box-shadow: 0 0 0 1px var(--fail); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.inline-error { color: var(--fail); font-size: 0.875rem; }
+.bot-check #turnstile { min-height: 65px; }
+.send-warn { margin: 0 0 0.75rem; padding: 0.75rem 1rem; border-radius: 0.5rem; background: var(--fail-bg); border-inline-start: 6px solid var(--fail); font-size: 0.9375rem; }
+.send-warn b { color: var(--fail); }
+.inline-error:empty { display: none; }
+fieldset { border: 0; padding: 0; margin: 0 0 0.875rem; }
+legend { font-weight: 550; font-size: 0.9375rem; padding: 0; margin-block-end: 0.25rem; }
+.choice { display: flex; align-items: center; gap: 0.5rem; min-height: 2.25rem; }
+.choice input { width: 1.125rem; height: 1.125rem; margin: 0; flex: none; }
+
+/* signature pad */
+.sig { position: relative; }
+.sig canvas {
+  display: block; width: 100%; height: 7.5rem; touch-action: none; cursor: crosshair;
+  background: #fff; border: 1px solid var(--field); border-radius: 0.375rem;
+}
+.sig canvas[aria-invalid="true"] { border-color: var(--fail); box-shadow: 0 0 0 1px var(--fail); }
+.sig .baseline { position: absolute; left: 1rem; right: 1rem; bottom: 1.6rem; border-block-end: 1px solid #9aa0a4; pointer-events: none; }
+.sig .x { position: absolute; left: 0.6rem; bottom: 1.7rem; color: #9aa0a4; font-weight: 700; pointer-events: none; }
+.sig-tools { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-block-start: 0.25rem; }
+
+/* ---------- buttons ---------- */
+button {
+  font: inherit; font-weight: 600; font-size: 0.9375rem;
+  min-height: 2.75rem; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer;
+  border: 1px solid var(--ink); background: transparent; color: var(--ink);
+}
+button.small { min-height: 2.25rem; padding: 0.25rem 0.7rem; font-size: 0.875rem; font-weight: 550; border-color: var(--field); }
+button.primary { background: var(--ink); color: var(--panel); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-block-start: 1rem; }
+
+/* ---------- checks ---------- */
+.verdict {
+  display: grid; gap: 0.125rem; padding: 0.875rem 1rem; border-radius: 0.5rem;
+  border-inline-start: 6px solid currentColor; margin-block-end: 0.75rem;
+}
+.verdict b { font-size: 1.125rem; font-weight: 650; }
+.verdict span { color: var(--ink); font-size: 0.9375rem; }
+.verdict.pass { color: var(--pass); background: var(--pass-bg); }
+.verdict.note { color: var(--note); background: var(--note-bg); }
+.verdict.fail { color: var(--fail); background: var(--fail-bg); }
+.verdict.idle { color: var(--muted); background: var(--desk); }
+.dpi-readout { display: flex; align-items: baseline; gap: 0.5rem; margin: 0 0 0.75rem; }
+.dpi-readout output { font-size: 2.25rem; font-weight: 700; font-stretch: 75%; line-height: 1; font-variant-numeric: tabular-nums; }
+.dpi-readout span { color: var(--muted); font-size: 0.9375rem; }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.625rem; }
+.checks li { display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.5rem; align-items: start; font-size: 0.9375rem; }
+.checks .ico {
+  width: 1.375rem; height: 1.375rem; border-radius: 50%; display: grid; place-items: center;
+  font-size: 0.8125rem; font-weight: 800; color: #fff; margin-block-start: 0.1rem;
+}
+.checks .pass .ico { background: var(--pass); }
+.checks .note .ico { background: var(--note); }
+.checks .fail .ico { background: var(--fail); }
+.checks .info .ico { background: var(--info); font-family: Georgia, serif; font-style: italic; }
+@media (prefers-color-scheme: dark) { .checks .ico { color: #1d2023; } }
+.checks b { font-weight: 600; display: block; }
+.checks small { color: var(--muted); font-size: 0.875rem; display: block; }
+
+/* ---------- desk ---------- */
+.desk { padding: 1.25rem clamp(0.75rem, 3vw, 2rem) 3rem; min-width: 0; }
+.stage {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 0.75rem;
+  padding: 1rem clamp(0.75rem, 2vw, 1.25rem) 1.25rem; margin: 0 auto 1.5rem; max-width: 72rem;
+}
+.stage-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.25rem; margin-block-end: 0.5rem; }
+.stage-head h2 { margin: 0; }
+.scale-note { color: var(--muted); font-size: 0.875rem; margin-inline-start: auto; }
+.seg { display: inline-flex; border: 1px solid var(--field); border-radius: 0.375rem; overflow: hidden; }
+.seg label { display: flex; align-items: center; padding: 0.35rem 0.7rem; cursor: pointer; font-size: 0.875rem; font-weight: 550; font-variant-numeric: tabular-nums; }
+.seg label + label { border-inline-start: 1px solid var(--field); }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label:has(input:checked) { background: var(--ink); color: var(--panel); }
+.seg label:has(input:focus-visible) { outline: 3px solid var(--burn); outline-offset: -3px; }
+.seg-wrap { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--muted); }
+
+.drawer-view { overflow: hidden; display: grid; justify-items: center; color: var(--ink); min-height: 6rem; }
+.drawer-view svg { display: block; max-width: none; }
+.drawer-view svg :is(line, path, rect, polyline) { vector-effect: non-scaling-stroke; }
+.drawer-view svg text { stroke: none; }
+.drawer-stack { position: relative; }
+.drawer-stack canvas, .drawer-stack svg { position: absolute; inset: 0; }
+.seg-wrap select {
+  font: inherit; font-size: max(1rem, 1em); min-height: 2.25rem; padding: 0.25rem 0.5rem;
+  color: var(--ink); background: var(--panel); border: 1px solid var(--field); border-radius: 0.375rem;
+}
+.tune { max-width: 46rem; margin: 1rem auto 0; padding: 0.75rem 1rem; border: 1px dashed var(--field); border-radius: 0.5rem; }
+.tune summary { cursor: pointer; font-weight: 600; }
+.tune-grid { display: grid; gap: 0.35rem; margin-block-start: 0.5rem; }
+.tune-row { display: grid; grid-template-columns: minmax(12rem, 1fr) minmax(8rem, 14rem) 4rem; gap: 0.75rem; align-items: center; font-size: 0.875rem; }
+.tune-row output { font-variant-numeric: tabular-nums; text-align: right; }
+.small-file { font-size: 0.875rem; display: inline-flex; gap: 0.5rem; align-items: center; }
+.tune-ref { display: block; max-width: 100%; margin-block-start: 0.75rem; border-radius: 0.375rem; }
+
+/* size slider */
+.slider-block { max-width: 46rem; margin: 0.75rem auto 0; }
+.slider-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
+.slider-head label { font-weight: 600; }
+.slider-head output { font-size: 1.375rem; font-weight: 700; font-stretch: 80%; font-variant-numeric: tabular-nums; }
+.dpi-chip { font-size: 0.875rem; font-weight: 650; padding: 0.1rem 0.55rem; border-radius: 999px; }
+.dpi-chip.pass { background: var(--pass-bg); color: var(--pass); }
+.dpi-chip.note { background: var(--note-bg); color: var(--note); }
+.dpi-chip.fail { background: var(--fail-bg); color: var(--fail); }
+.dpi-chip.info { background: var(--desk); color: var(--muted); }
+
+input[type="range"].size {
+  --track: 0.625rem;
+  --thumb: 1.5rem;
+  --z1: 100%;
+  --z2: 100%;
+  appearance: none; -webkit-appearance: none;
+  inline-size: 100%; block-size: 2.75rem; margin: 0; padding: 0; border: 0;
+  background: transparent; cursor: pointer;
+}
+input[type="range"].size:disabled { cursor: not-allowed; opacity: 0.45; }
+input[type="range"].size::-webkit-slider-runnable-track {
+  block-size: var(--track); border-radius: 999px; border: 0;
+  background: linear-gradient(to right, var(--pass) 0 var(--z1), var(--note) var(--z1) var(--z2), var(--fail) var(--z2) 100%);
+}
+input[type="range"].size::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  inline-size: var(--thumb); block-size: var(--thumb); border-radius: 50%;
+  margin-block-start: calc((var(--track) - var(--thumb)) / 2);
+  background: var(--ink); border: 3px solid var(--panel); box-shadow: 0 0 0 1px var(--ink);
+}
+input[type="range"].size::-moz-range-track {
+  block-size: var(--track); border-radius: 999px; border: 0;
+  background: linear-gradient(to right, var(--pass) 0 var(--z1), var(--note) var(--z1) var(--z2), var(--fail) var(--z2) 100%);
+}
+input[type="range"].size::-moz-range-thumb {
+  inline-size: var(--thumb); block-size: var(--thumb); border-radius: 50%;
+  background: var(--ink); border: 3px solid var(--panel); box-shadow: 0 0 0 1px var(--ink);
+}
+input[type="range"].size:focus-visible { outline: 3px solid var(--burn); outline-offset: 4px; }
+.ticks { position: relative; height: 1.25rem; margin-inline: calc(var(--thumb, 1.5rem) / 2); font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin: 0.25rem 0 0; padding: 0; list-style: none; font-size: 0.8125rem; color: var(--muted); }
+.legend li { display: flex; align-items: center; gap: 0.35rem; }
+.legend i { width: 0.9rem; height: 0.55rem; border-radius: 999px; display: inline-block; }
+
+/* calibration */
+
+dialog { border: 0; border-radius: 0.75rem; padding: 1.5rem; max-width: 28rem; background: var(--panel); color: var(--ink); }
+dialog::backdrop { background: rgb(0 0 0 / .45); }
+dialog h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+.busy { color: var(--muted); font-size: 0.9375rem; }
+.busy:empty { display: none; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ---------- phones (portrait) ---------- */
+.for-touch { display: none; }
+@media (pointer: coarse) {
+  .for-mouse { display: none; }
+  .for-touch { display: inline; }
+  button, button.small, .seg-wrap select { min-height: 2.75rem; }
+  .seg label { min-height: 2.75rem; padding-inline: 0.85rem; }
+  .choice { min-height: 2.75rem; }
+  .choice input { width: 1.375rem; height: 1.375rem; }
+  input[type="range"].size { --thumb: 2rem; block-size: 3rem; }
+}
+.mobile-flow { display: flex; flex-direction: column; min-width: 0; }
+.mobile-flow[hidden] { display: none; }
+.mobile-flow > .step { background: var(--panel); padding: 1.25rem 1rem; border-block: 0; border-block-end: 1px solid var(--line); }
+.mobile-flow > .stage { border-radius: 0; border-inline: 0; border-block-start: 0; margin: 0; padding: 1.25rem 1rem; max-width: none; }
+@media (max-width: 760px) {
+  .site-head { padding: 0.6rem 1rem; gap: 0.25rem 0.75rem; }
+  .site-head img { height: 1.9rem; }
+  .site-head p { margin: 0; flex-basis: 100%; font-size: 0.875rem; }
+  .stage-head { gap: 0.5rem 0.75rem; }
+  .scale-note { margin-inline-start: 0; flex-basis: 100%; }
+  .tune-row { grid-template-columns: 1fr 4rem; }
+  .tune-row span { grid-column: 1 / -1; }
+  .slider-head output { font-size: 1.25rem; }
+  .actions > button { flex: 1 1 10rem; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <img id="brandLogo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtAAAAGGCAQAAAD4YX5gAABaJElEQVR42u19yZnruNJl1O23+ZfoZS/xTOBd9pJpAtMEpglME5gmUCZQJlAmkCaQJojb3lUvSEkcMCPAQRmhr+rVu1fiAAQODmIEICHBkBL+Peknp8kjOar8oSEgQZGOnpyEhACahGCOnpyEAJqExEIaAmgSEgJokmNKD/1J4bmnySMhgCZ5d4A+JxMlgCYhgCYhBn3Y5yYhIYAmeXvp6KlJSAigSQjqCKBJCKBJSAigSUgIoEneAaDPZ8/tCaBJjiz/oSEg2ZCLdtABQGx13Rt0wK1+00EDzOgXPTkJSUhIfofUmqoXLTAAAEgtKmUU47UL41/UwAEAIDH6LgkJCcmvEB2Ips9v5oZg+4B0AAat0S/uED3vUmm/XdKkkRxZyAZNsp2R4/b8r4vhFa9PE0RvmEzeTb53835iEhICaJJfAtD23+1mYG0iTbAnJiEhgCb5FQDdORRX6pGfwR7OSUgIoElOK7qgNbbBMzRWz0sxHCQE0CS/hkGrAS+y5sOhNxQCaBICaJJfBNEq4RsAdC/ZEFw2FBISAmiSXwnQYdxzU07MZvfTgTkJCQE0ya8GaBYcoOecmHk9LQkJATTJLwXoJgh/7awYNAE0CQE0yS+SRgPQ7FBPSwBNcnChYkkk2KDHFQDNJxDeB4BrGwPHHKAHvt1P/iEhIYAmOaUwYCOkcQC4PqGu1wA0m0BpGBPHS3TV7OZR2xlkz6fqJ58OHjX4CLRJCKBJDgrGDPjkH7Zw+L2grlEC4/xXEfqzursI2WoLWV63g/75Tz/+LwkJATTJ5oAMwJ8fprUdu8U3N5CgP/tN8lR6gI40Y7L8xothD5+e0l5ICKBJwsjAjB+AzC2tw+bxzaFTVVwZtL37cvmLB7t+ATYJCQE0iQckM4gmLNnnWlPYUzn/oqDvZAeKjRdArwE7mj1HBx00I1RTtAgJATSJAYjwEZIHvowH9qYAHTZVZR2VYQrnHDWiZDCIRKMJZ4DoBjpoyAxCQgBNsgRlPgHmMPdgk8L6vYa3T7/JtFe2Y9C9MSfuLUPy/LavF1g3T25NUE1CAP1LQfnBlSMDJomzCTQT00FkBLj4AH2zMFr0C769jTzOLf3Iqm+je5GEhAD67YVDNLEqbynRBKBNTRf4HLJf8FZzBs03nqlhC40hG1n18CGgJiGAfjuJRhNGtGMqtWkcB4PIoFPgFtJJn3/7seOQjJz+NtqqSUgIoE9uxuAQQbwDW/YB6OU3caM63NNU+CFmNIJoBOoGbuRSJCGAPp8MXHngy0faLqYwqU73FgMqNkDri/XPDQ5HGssIIkgBRsPHjcL0CKBJjg/MHGKID8GXRU/3is7oNHEcplzbHp47C05sF5K3j7wY9Q0aaAioCaBJjiYMIogPx5hVAG1uusC1tXZWcRk2YH4ERg3Qj3z6RouCAJrkGPwphvjQwDwFuc6IGYdve2UCut1mUdCYQB1DDBl0cBudiSQE0CS7MKZkZE1n2k5uhgDNArm+bK7a7Rpk57v1pJBCP7JpSnghgCbZDJqTMTLjfGIeaDfNJewQ37VbbAPmYM5PqSsxxABjvMeVFg8BNElI/jmwZnbiN3hJo8gRZMHiODrJ0+i+e06AnmrOkOxyJbMHATQJNg/iozmDnf5NTKtsTLuqNIiGnEZ4Dz1As9OP/SPZZTB7XAmmCaBJcI6o8anZmwygwdh0gcmgbazK7wbQU53KR+s0pY4TQJM4sZ0YEtRyn0c5C5g1vtoi2duuUBJ7Mw2LIIKMzB4E0CR2EkMMkbaZ6Xk3HjFDVX0Pj+PZpUX3bw3Qj3F+mT1uVN+DAJpEdfSMIHkzzrzmbfYAjcfu5rWg1ZbtZRR0/6YQ/dC9R7QHmT0IoElWyyOB6M2hec2FO2UcRwiAbixST+Z3vcHfsfwnf/77/QD7Yfa4wQ1uBNME0ATNyYnyAF2kG8vOv1qlzvmsCUA3aOzVxmjRSbn3g+PP4fp9ttdHksuVYJoA+nez5veC5v75efSsHmCtl35fXdGun3yTBZgBG4AW/30z2U5ebcPY+Dm7hj5yES/kRCSA/k0yQPN7MK7+2ey0d+hN3SlYXIg4ji7Qd3uYR30MjJo9ezyeF6wH63QPN7gSmyaAfnfhkEBysvoZIujqoB8bm/pVeVCne0+/h7OdmUdB997v1Uze5NVi7JxwzSCBBHq4wpXq5BFAvytvTk9r0njx5A61gak5QOPINIws0rzxPCmcQecM2/0E1Nisg/q5wHowegx5iBSQRwD9NsIggfSEvLl5Ova6QDbIxhCgceCgt0j0nkNxCulzm3o5PXuH80O/MIU8nIzRQZssrGWI9LjBFa5k8iCAPr9RI4X0NDzpATvN2OsObwE+HGccugmfNK1U1wWZGfM7sgn7nRtM+skWZj9i043vBdT8BGA9pItf4UJcmgD6rBJBdgqjxgAyAyhjVQ5mIz+cWl7ZyIb/GgF0FOA9wZhBm1Sye8RuzLc3V+v80Avl+mTWQ1/JI0P1YPIgLk0AfUJJID14uvbDqtwgZY7N0zi4YQCdKo5jWvkOQ1xjOEwtxY/cxGS27fXjxufGrNkI0/ywtQyHDi5XuFAoHgH0GeTYFud+ZGoNgrOPPUE5mnFknWlhHuGs4uDTp2YI7z59CnMTh1sSChvrd7+49c2BWffP/oLDOMeHdC1yyCCFG1woxoMA+sjCIYH0kBHOL1j2sxm++PHDdOEC6y9pDBk0BkDfFlc3BWj/+Ry4dfxkx90zJsaOVd/gBwY33fF66gyheGTwIIA+qESQHNAdOECBTwEcNgNlDJson8CyGUThtL0yr8PRB+xG+OLur9OMne2/gWbcKode7kcC6sHgcaGGAATQxwLno7kD+xGW3QLk2Lj8eZBMuHmlOjNujM3JdPx5i3axbOyV84ozf0TPmJ+JLuNMHakVGod8tEpThAcB9AE4QzpaGo9kynBJy40mOW886AKec1UmHdkLKkB3jt8Mz1AHqH6YQB6u285ixi9judqjVBIfIjyuZJUmgN4XnLODLIh+7I1hy5gf0PAo8rPNeWN+YOdGTBvTwGEXBb2tCeGxOU7duZ3R+13hCvDk00cwfAxW6QtV8SCA3kP5jhFI18FtXMh2wMxH++X2kbbckNfidlXpLDp6H6HZ1dQA8uLUvdF7XscYkvgAho8YYmjgQq5DAujfBs43B/dfNCZA7Ltwp50JOwVETXm2P4PujUF3HsOxN8Sxp67142as59RDeN7PWHF8bz4dQQEZ/BBIE0BvAc7ZzlHOA0ey4czsCctHyExjhgBtxrMxWLwcyo/VjXAIZYMxqvpmEMvewwUuwCAau8Pv9y6cQJoA+t2Zs20zIjbC8tHaaZnFcTDUov3mid49chR0mPGLIHvGftw0G9gj3SUaWxKz3Z67gAyu8EMgTQD9Xsx5qNNgas7gzxjZY6YH8wUcRpJvYQK0OQfvLSKm92bUEUTjGN4MIj8aaOAH+AjTfKe5zyCFH4qUJoDGkz2jNTq4GluaH6FW/OD9WrgUDmWmEP/Kem4uQjhFmdgXUDcGfokOLnAZoz32id5nkEMKF7gQkybxB+cS/t3lU0NuuC0wiCGDCu47Pan9m01hoZB+LzH6Vj6bLdm3pptCpny6fDa29UnGdPq5Q2lYD4ZBCuVuetOeqBQvMegDSgTZLkkoHVzhahRUdaSoVxsGZW98aILdX8Wgz9mt+9GiSh8b30/Y9PZaRI5DEi/l2YP7FJAYsYroVJx5+YmMWG9ixHrtGbT6TBTPtOCsIzzlqaVRCS8GyU5suoaUAIcYtA0DSSHb+PA1NLg3idCIRyfPGaUX9B3pFG96teTZclbcW3x3+t//nRSLYs/PuagGH/n04M2Qz80VrsDHrvPbnlQLSOCH0sIJoE0khWzjw16jWTqv43ZyMmju4dEF/NUUagnQ8lp1eLmE8zQVbgHl/SLsjj07xExLSR0fsh+OxKHpq3zDGlyIEcQbF86NIYYr/FCBJQJotZrkmwKgaSv787DmfgLHZu1m5QCNV7S/WUCsGZTL/r5bbZx89u8jy9D0dYiovyrGq4EfiCExNLjhSAIJXOCHAvBIxKpbbm55YwZPlUN78JiBGiooIB0dTfYLupBeeSqthw06m42oys5aejNVDjGkkEMF9cEt2C0U2kA7BsnGvo775uZFYtAnOABmG4b89HB5tjKSC4f0MOUj12/wao3aeTMe08KaWHPNvJ/FlGEPrDratFqguQw95zu4KU5xwxlvS5PHECX9reD3JL9M0g05amWwEXBIoTog36qggAwS9JoOiZRLTSGh9mDQqcF31t/EBp4YUiigOuSJqNUa94Yoj383XCkRQRNJvBkU3qHU8uH9Qp3k5osSMtS0cbZy08mNDtNAu9IDoBOD7WAdZAeBWrQyiCCBHCpoD2YEqbUO8m1NbjkZO36ziWM4TG0hnUFj+hhiSA7hYuqfRS0bBMMCm7jQXp/vSb8UecEkk6L9vdH4TyFGbaCYfrOCV2hgN/nfDmF8r+M9+Fhr8AgzP7gQBweieFwH92GyUSheBgn8TDSF5BcB9FbhdPpy5RwSSHY/0D26TTdWUcMyhsxmbWaZAApksDi/FgZAz3uZm3dTkT17D/CMUekn4YNu2tE8Ry06RCWVIQ8xgytcJUFvQ/5hDOkGtTw4FJDAN4Xf/S6AjozrXPjJTRN+zyDaRM118NU4N5h9QTJ/BpqZmAWWfVUiLUA3aEteNRYm7WIZLKOpX+y6e0Z827LqIZUEnk7FaOf6zdnIpWUljW5wAw7JBs7DGGr4oSKlvwWgGWSzsKtQomuZuY1yq7mbfbOs19NPWTJ3+P20mGjYyFfzWtCu3Qj56o620eDT396eV4127n8TQzxy6ZtkvH7gAolhaSZfYwdFdvwCiTeoT3aHQqOw8W6uwDvUUDhGYjycWyXUCI6iKaglUk8+m4Dg3TFCo5q9Rbt5Jbs7tKOz1S1SnEMM+c5R1bqo/WQTZ3t5yuJVJMYAU+wOzgyynUpYtlA4MR0OMWRQoICyLF4ikj4zm4xc6wjQxext7oZBdixQtMIA1jkk1syYQwL5jgVQdaF4W5TmvVNhpXeVJHh4UAu5coePIN+BBbVQQWYJBi+uHC4QLDWAzWkkNJNAkx6gM+03xJvGfQO4GXIwYytmyCGBYjegVgeLRlAEHzeKkH5D7lwGX2pqcN6j8H87GjPMR2k4TG8Tn5vP7lwbFCYtHQF6eo1UOYeRMZSH4NXDCYdZbKLpTiVn1QYPHpyI3DfxIpFsZndudwRnBunmbKey7KAYQbo5J5tXvSgNALpwBOh45mxSgSQzhPLQrDq32FjZTny6VYap8uBMmng02Z0Nbc4qNc02TextobKIDGFj2f99Uo/nrrvcwOiQIzDoXMkLwfCb27lzTTk126WFg9rjEhqkiUcTd9aywEh50Gs3XCqlMesaehiWO9eEMOOrufY7OoCeV/TIvTn9HgaF0ti9G+3QZVBllQ5t7iAefWLunO8Gzlu4SuYtQpnF8j1GsR4zi28xc/O6APR8I6i8reL7lgdNDJvBJhvPsxqky6B6RHEdJ5QoaFxmrVDH7cD5bmzQ2Nfv79P9r5qNrAtAlzPgao2D7I5ay/k+9ntnRrNeblqpMVGsijLo9kDx0aeSNODyahU7drRZq9nKsJJIBNmh6uPJS3u2BnbhuwNAm0dBzzeMfw/+uUNp5AoenIj3A4B0yMqRreK+JL/GLajq9rAVc261eYoPO3N+8J4e87y9agOAjrxzG8/Kp9mGtmnV+TJkNkJBxUnPYNqodzhIbcOcB0cgM4Dm4oAWVJ1TrtCmqoiTr3UAnRvy4vtsZLOTAPR0246NWkHUGzHpWKqfWbCNoiaX4W81bcgVjm8CzrWRSSM+fAdDOTtODQwPlQNAm3ZTqQ22i+Pz6cJgC9+q6L7cjR5uzZDL8BeaNuSTzjZI3h46sRxl0eG+GTMAz0QTJKcDYN3vxXy+OiVAP9i0PuSSbVKwS5UlEM6NT6aOX2XakKkY2yAJpTXgzRyyk8LJPNAuMqhWlzgANDfkxWEq2e3rRNSFX/INSnfdFY2rQnUDJVPHwSQJxAXk7o7wjWYr7WGV71aLAeuTGITA6QA6UQL03TgK2qR40zmNHrrzV3guLXeuhzqD3imq4ziSb7zzh64pra8nPRxQ29ODR2rAWjMNQMdIAD0PsmvhDve3gela27M7Cn4elAfChTJ25ASNR7A8l4H4ayRRpjKwGufavsrZSaH5Di1UUEIBGaSCTuGl1jYcWwN0bcDR1+aW4dscIoghgRRyKKA8YBduW53WmTxCl92XJ2aHce9XlMCyr/AgXFbmFAztEqwVUdbD/ZMTmTSGPiIVlJCPcKzrJZJpoytEpgc1QFcGVu5hYzQrSTT04E4gg2LsLHMu0B5MHmoCENLgIXcbhkkIbzfpPUoiMTWEUCRZtHPYgv+1xuJ8hiiNO9RQQgEpJAJ+bOJJ0MV6cMEYqG3QOv4tDrKzOcE9ePYDss9gGNEFbYYtcSTPxQ2xxijwbidJN+TOYSt7VBqHRnKgymrLpfaA5BihB7Uszy9SMuhMGaVRahm6KMjOz+jGRo6dH9osouPSYZuzVdI+7iGCZcka/RaOQTF3DmvYUIMz362Dodpw4d4AVQ1td0mgo4pjT40YrWALUf2tbAmz8QMI78dGo8ij2e79YFxaZZdmkATUP1m8cggeXVJs9Lkdg7Li3yENG9Xu3d3sjBeZQ6NTnWmAG8RxPEKmuKYrYaGMzlAzs2U8yX3ciurRrZlD9jTdcK/3fliwq8OYrHTNYMO5DmWRHSHs0W8bG/3PAeEZ2/DfwBc0QktcqGjKBn7gqrCuZ2hQ6C4ddNBBAw100Hsc+NkIyAw4APDnnwEw+IafWRyHeLx7uEKnqIV8hQ5i6d/+QAOpRmc+4DazdMulB4AeeujH8emfHzdjSAQcOPJZxF56uMFlMgYijQzjbrvCN3RCE2aOPCY9fCrekARFQmQMihUhDVjSJVEs2nRno8ajJ57bBrG0wOoO9WVww5XZO3NDZ6LcFl9BOYYPMoeR4xBDOjoZ9wzES5RO+SrQ6KeSMak2uhMJGjy3mxyyeMBDXap0y7Q7wnJh3FhpfWhPnzZWW0gI7fg1mxXcdrH3WXghs4TqwV69lyaordKhzB0yp2EWgI6RBBL8sDqxWzAUd1ZVk+Y7hdG1Y9l3bgXJHKIJJN+94MCkYFJ4UArH4x9u1RxSK7fqsPEVu3BqdQ2YJFD2QSZZ9djroiAoDSH49TayTbmzvK4X36AmngiYU6PGSfNDeAEVKmTMjQt71cAwqUyNN/IVFKPD1YZT15ufqVQ5rWFq0Yh5NP6apJgOdEnRl0m8IXdWVcbdFpxbqCwckA97chkwPGw+D/sc7E16u4RKfX9EkZsB9batGFQgHcYgJ7MSF+hbAUH0geFZND2heg/LXYJbgrN5q9EBllPIN0qySHYBR3mQHYNqh2zA+2gGMUn42bY3uwqkw2iwzPCITVXepE7H/mF2GbJh/we+BQaUPMCE9fAzCyOb8490k128hxs0cBWGMi0XfjTWmgitukN42vDPbRaglksskWHlYxZ+NU1TmX+2CYZ7hDY2yjljEEGsCC7E1aELXCRPE0GGHozawbcgCDVC7t7dwacguJYA2lJwl2wPX6upZ5AHCb+RRXgySCHdYP/uoIGrZpnDCMnxGJ8cYnH3k7jh/hk5LDsr7eHC+a/B9gVPyOaTf2AS1R1i5Bq4QQO99PkYMMfKJ/badIGLZN5ibTlTe7nA9+puXFvqyXaE3yAyel+AxoVnUUJKZNQl2/5OskSU1Ki7oO9iukKz4KZrYB5gOUJPB3hw424CzaYSLwLvtpAe/uuciPNIwWFjugkPMrdDwtAA1bLZjCG2cvrigjSDVFOLEWe1AhSoZIqSVzzhObTvNoRbUF7qPwnu4mkNykniupruUEMFhWPU7xpoto/jqFF1doh2cYsKN4mvzhQwzCAJ3h2llgIkfitYcegd7pql3isHgWeRHTtEQJW81H8V2Jmjbi7LUaNqB6djiIJJ28dxlME0mD+jYHDLkA5Bklwx01XgyuWJ9ARUo88OE6ylNqCjmsRIssC7ZIikcVmwPQ8cW6vulRFBhrRg78+wsHBH6e3jOLbJLWOT5B68ec+l56XQzYRlpb4YZMibQyugPAz53QiiLSVFhc1YYGy4b8ads6DFz3NFjHUMBQLXaJ9p4FvEMBSbA/TW9RkYcIhHXt2i6EAhbfcQttFDsdFpURwdnRNEvwM814KjYLYZdw7XYPau6PvNECJl/YomHePk5JIqs6088jP9I85bKCX6ENIyLfe3YHt3CqFP504Qvb0kQVNS2Ga1ZsMZNuStZQdovp+ELYeefTOIOUad4Ber9nsbGZvmwdLF242q0YmoFq6hkiDaQDBLIhWbWJ7zTRiErtoYg9iZNd+h3hmWpzO0dVWSYyX9smftDZ9tthD6CcK1Ha4l5xDsiItYsA0QRG+6PO8BgRO/Hp5YMUNFbMhaFbhaGodadvGhkl7ZxoF29WHXAh8jQO7ObyaOuI8ClRgQ5/lh8+gssMPwdF3A/9lUJSs0sPiCy2o3x85SE2U7AWToIftDT5GLIGyfQQKJtVI146fzSNAI6SbcyujQA4ObIPH/WDI4FSOnFPwebnAVpCwxSC3q6Znf7UeYyIK7ItarjkGBxn0pdUUheDvh2iqWo9su0424813KhGxjNIb42YgqeZ1ShkA9FxOF2GcRpiWs7EyJeac1jcP0LN3Px6K3Yk6hop7xHYNityB+QF0r4R62nS3Ma9mRHB+oY6fIdnHHxxCNrArhdpCjrosoKERzUrNwDDcJaqMaFJAFt7UN3nHRfWyKpd+t6j+TnEmG3NDWcqMW6VSMTmDEkR0JaquH9XZTIj4/QfRi6kIdTzj6MS58fQBZeyy7xlgDNJO8P5+2cxGLDR4ROkiLnIa4NCYNSMVqIjXTHfwe6OCDnbUv6sTCkOOdW2HwfwSF8SjVQapbkxxZIsgt4OkudMVig3T4DMA8oKGDuq48d9X2JPBcCY+HNapKFxJ2czccg4JcHL8cplsvkMa2SYt4dBIw1wGTLpWkUAAMCeDWGWExerLpGp5x3YKi3oXmrbiqjXq0kBz/RGp+2hLF1uOSjjZwqbI1bSqCwf8vlBLC2J6xU4ZFAfIlKjsXZUmZLbR2w9hhkrMQH/OsQRFI4/btLoKWXKgDQnT2u9UIyx6VBDxEycqVtogcIxUsMLN8r3qT9lkk727yKAWBa5jnQ1Fgaoa4gqJgEP2L07+zU8CzqB5tipqSzhz5S0W1A0gMuHRqaFde+z8wC36JXIZ4K3UdGIeXV/FLT6dYRog0qHFDVEMrRzRsRIJxqQ2UpiSjBokVlzYxl4nKh2JmxxaCq9doQBoHguhfGRWNVRYpWzk47qiW4bXtrArIKExcgneyOJM4CYfM4GQmMrjhWaRrQZp2FQyiSwhl5X77Y1eLZB4ICc/r/R4v7aUUKKre5icOwyMhsTF41AaAFK9+h8dH1y7JIhBE47kif1nIXRVk0CJkzzMEgn8Rd9aHNhE4k2CBtEktlzWFwAu/C1fMbA3RWPz8F8VzlEjmhyW7xYTnTHDMuwfjzoXBr8isQYIpepAWNXLDiuwoBOsrFERjbSu/xCWfBrEK4dbcECkmVo2N9UJptVsRgTNJGJCurY0dEdr5l62e5h4EorGo26+I5+Aok7AcKhYYnnOkTSWy5s41pW6T7AzSa18MDo+uBUaUNghEYxk/f4GzEMe8EcpbK4ZnnKuLWnC1DkUbSUjwT7U6TUyC8Ohw9XPWEB3KNEPmDS2EFoeHZ1EuYm4dkUpCEkr0MUQiHh1iZWAZK5fRy6HyLsi8odnDsoDwjGM6Wbfo0YXnk9WZZI/1WVjyaJy4jjTIqlt3bM/IEq2WKoAVKDk8PIv81XfL6l8kJNuIrtzokkfjxEdngSB6iRZ5EOB/E8E5EPEglqVwSrI+EBXWlTlISI5jka4FlSPv6DQGC6LLACTxLdNWcMwbyWIS20PDcytowFVRxAbJyY0d62BRDJdhKIjOg2DG21miK/ShxozdCKEcoiCiu1LpiTuTHMnYUVtFMefovBQLotMAp+43s0RjmDcqdIUIqRhrBU7JKUhyKlHbl9fnQ/9c22pl4a5RwDRemGRw7NtvIxh71tL6HAesWId/XFNtJ/ff3rWB5NA8urUwDPpHMYeCaB6A3OVk3pBZnzmac3CdG1SiT5yqplZN3Jnk4Dw6tzIOlsgnZaxQV4aOSf++x9rNAtiIsSpUhejDkK4cLjXFbJC8LY9eR/nn6Cy6Ree7OPU53iD1OzpswLmowHeODs/yQx/FO5OciUeXFgnbKTJE4ySAJwGMpPnZpxVjYONA1ucEmevfBRUL7sZFR0lIznoWvqP3Ba1W1SrvB7VEnzo0tkDfo/Dq1uUrlcLm47KwOnILkryfqQO7+VyFfD3RNavfbeaIA5g3sAojlcZc1xWeE+PwJBKS85yJK2PK47umCmQKJbJEYwQbZGedyuOaN9bl/ltkc4nsiFeRaYPk5JLvBtEpOqKkKL4s/l7T6DpBLFhnBN+jTmq41+e0ukneQFKFbwUXojN0VGkDBNxV55vCENEbWLmDCbKlPDW0lpHlmeT9rdHYEL1cXSUy7QtRJegEgp+cEiHBM3Y9abNj3Z26o5C8lcjj+7EhGr8JLL6Z42QlSNMAx4YwFWJjZLiXwTM5BkneTeQOQ1z33tIk6V86IoSZIz/TxN3R7cQpkvWZo1q1qxWraAmeSX6RlIZwlXoCKnYlHvxojhO5CvGjn7Fqb+Das2qjwi4EzyTvLIWhey9DpUL+2cRzAojh3zpJGf8Q7kGc6OcSdZLNYkEInkneXfJNnPHY9XhqdMv2SbIKK3Smi+MebJGtzybqR/BM8nsh+r5y71WIqOCfu5Ai2slPUyM6xGvi1K7DbZdldoCjckgkvxmil7ZjX1DFTVtbPl2JjjIHlBr9JZMg5o0C1SKWGFm8SUh+G0Svo6buiKdgX8txsTip3xHI5aHD7fDD63BsQ8uJTVCvJnZhUtYgCUE0dt5BiYoOSz9SgW6ePZSEqL6RBDFvhA+cL2m9kvw6KTaIncoWrBfzZI0RLdYed3oydFMEDn8uURUkN1DKijqlkPxKKQ1C2hiqJTpHJYT5+3JohhKrjJ+esgwgTzxtTHrrc0sV60h+qYgjNXAjqOZ2Xl+4r9E59EHt0PlB+XOGuntH2um8UxtYkl8N0a2BJTpHdO7hBsy+KYfG4c/4RUxqIyuZa3BdRbEbJCQLEUdDpKjkK0Y0Wobg0L/A/gwBcnti1GHPDJgCCcnvk8TA1Bh5uuIYIqim6Bz6YPHQIfhzfDjI19fUqsk5SEIiIS9VQDNHhmg15gG6H+4sIcqL+ucPLvdsv6fMDcCerM8kJHKzQzgzh69vKUU0hB6uLgdO/DN+ef4ckeXfF9w4o44pJCRKVKi1lAnT5JgiXisKcHo/OX9ehncXCFfkiFdcFmq5v0NfMhKSgCIyAuLmJKSIBsw48Pl9R8EPhsOwAmFmHC1ty+WZy3WTkOxoiU4QV/p81SWIJtYEHdN2Ewxn3hLeMgT+rINU3PRzCq4jIVlLpT3ZYroK8YIAMMy2B+lTiFEMtNBar/wOPzHi3iqaOjJvkJCIRMSQC+16ci13FCOi0JsE2+EU08cOsMOtKB1r2T1Fb5CQiCUNnJBWoq30+Tn+TRyFGAEpNfo1MXsl6OtdUWFREhK5lNpqGnjuvRjRaozhW9vZM4WToILtIGxRp1/XXLKl5BQSEkszByaFqtA4dK09K5/MUZge0kGYBZt8vaqRkJAsJdOseswSZjEaG4/OX5UjRLXmGpU/49qfC3IPkpA4nLTroKnaJRqC4Bs5dvRPxQEchP6m+RzxGZf5RfcjJ3SSkBxWEm1Y2x0NBhO0FZ+f28iB4SDEbgO5NJhgNnon/kxC4iqVhvceJR4aO5JjNyMHjoNwWS/DNzy8QOTj+pKGFF5HQmImkYb3Rog5hSkS48WpMrQTSuC0c42QjSY6m7H75pEfuRwKCcnhpQgYw4wHrPNTcYlOQjeTMgD9L1Cv5xuwp/Mzk/2ZhMRcdGdQzG6h2QG4+K6GUB4gAtr/QJEiTdJ6WFOyP5OQeEquNElidvv2wacEHed2SFfBiYDGNXAsazb7BckkmmsltN5ISKxk7bea89UC0f9Uwv4Oxx1zJaoDGjjCOQhjbf1qEhISFw6do1G0u2bNutWmxwi129xbxQ8ZwZEgwn2u2Y2pewoJCQZyzKlQ2FPv9tU9dioHgWHgwK5ht6zAgVfEkFN5fhKSYBw6ReOrc79QhkLPcELtggUU/BH+KYb9tYNmYZLwkxv0M7j3gdBm9myp4F4drTQSEge5zNbpEk2uXteOZqv+urqTqUzhtF/glOuTbSg4KSrYNThijVHC1agv2kHJQUhC4iqlMtjODwfmpkd3T1mEbC/YNOYLx8CxbMOKa+DA6+CdkoOQhARRIqV7P0MMPEhQ0IkjoN19Syt0iQLQESrol0gTY1IbixyEJCQ+Uin6FHLEkzR3th9XqKf7gAnffwQGDoxb4VugZTYke7nOrrR8sn5xLxISEju5LP4/n6zYznN9xQqUMRc+Y7wYKz6Qm/CP4ICCEcFwQwX9OWj6XW2uIGsHYYPiNCAh+b2ydrInaHCYoEArn2HIgd2EfwLd6KYYDhdQ7dCu1kx8v1yw711ofZGQeBKq64pfRhNs6D2uPV/9N4/rTJ/XX3gYK/SfIFS9D2rg8LvaVbobYxzASEhIROF08YQi+QWxJijrdW4q8YfojQAaywLdBQRony1kbixJBHfqaXWRkHhKswLOKRnyjYYGBPNENEMF/1XPwiS3/Vk9NkOZHkxW3s/gnqEZOCLBlYg/k5CE4NBT35bfKotQ7Md88jw9SmLaJgwaxxd5QyX/Sws0Q3qyWMOvSUhI3FeaPKOw8wTEWEK5bCF6ijH+sgmDxrlJg8rKG0S4b4QK4z/ZJCQkc1olP0f33hwaEMA+RuDhGwM0jgV6CXOR91RjXW3qvBTFglxpXZGQIMlVYZrwA8R4RtLcjRynY9Ac5SZLn6jvNfFiOKZbR6zl6iQkJD7rtpdyVj9n/Nwh96sAGkMaVFa+dBFyL5VRAX1DNexISNBEZeTwtUJjuAkZsptwAydhhDQxgAapyyBy5llmVLVtkAWahASXQy9hlUn/zh2gXYPkpt6s/qgcGh+gl6/q+9BzgwlHejJGIXYkJIHluqJXEdJq4wrEceO8GAw6AIf+g2iMEL+q7zXx7NndLMl7fR8CaBISTAln5GAz9nuUQLsAAP2fxY7nf4teAKm943V7YAI+Lr9aL4Xg4Ur9bNt4XacH5tGfgYSERMah49ka5JKTsR8UvnEk9D/Bp8g/TaU3vlo/gm4vPG7MTRxceR8SEhIMThnNYHS6Bn3yI+bVflyjz3qNV8oeqyjMgISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhOSY8r9oCEgOKAz+LyTwP9DD/zvoE3Lg8H/gfyj/lCSk/ENDQIIGqkOXmg4elQ1cy9ikkI6Jtx3coIHboVJoY0ggehYduMEPcpktPjZY7cfx65//RfILAfpRlaIHv/bjEbDdctEZsIOoMAcGPcBO4/CoJtB7waP5mLMnl4yAL+rrTqWHbixW1UP3/EcmBaSLP+lHoO52rZjCgI/gvHy6vyjFKjlwiCfQD7PRHEatGccutH7lzyJHw9oa5q+BzrMXiho/eicc4gvdG1bfdHM7NUAnUE6Wcz/CS/dcSPJaUcMS5c8FyqCHG3wrlYdBMuso1j8/nfRuDBjEED9V5WdyBw4ZRADAJ88vevYeaYk+/i0blwriUT1gHMn+qS7dBDpF150q3MBGGXRwMeZnj5l8zeXrGfrJczyeYDp/fOSCvcEYRBBDNP7atdzNADY3QRfICGrprx6z200gvp9oH1MA+OMboLg6e47Va4vlTwCQl+T5gosXX47GDc5m9Dq4wS0Q/OSQKe59gZ8AxKYe56afYVEn0Vz+/IcrmnhMQbqb/OO/mUTj/Qc9DtiL6R8oBd2tl0tiech6DY9oAv8qhkB/t9cdYQQQttgfX4yFQaWpQbU8as8V2ka9o/F92QjQPfQrSGNQa5aZ6Lg6h7k16H0aNrNVj+36OdZPeoMPzRYQQ4Ja9fZjtf2owEE8wxz2lh/4doCkeIRmHxlgGpfVqrbIh558IUNSCoWx5vrWXfbd1ES0xEUDDKWFf5E/uWLqce8Qoz+77SdbvN89wD1aw5msEO6VSJUyC6ApIl2pd59T+09htbxjyKFG1ZQWikWnax/JDO5YI2+L2Qlnff5Jw8DznwD8I3b4Gzdb6/7cKd7gHqZ9GDFYVCL50xryIKPNBYfH9xUOOVRQQeZVC1l03RQqqJDmiButwOoAq+9IkoS57J8ggMI8pt7cFnwEiTZQU1NLbx9kZDmUUAZ7yyVQxadcnL3Rm5bQjh6TUGOZQQ2F9x3MtI1DibgOzx+jwrfo6h16sBm8m7ANGJ+p8oZwVCRQh+IGQrV+T/4cQRl4HF/6mEIFhdeGyizeigHJQ5OD6G4IgJb7SbEgpD/UxISXDvFbNiObbbAE+cbb3fbzk0O1CThPQbqGfAPwjBX+phAafnSIDgLQ+L2s5Ve8It2hOdC08uBqZtrOtkOeuxxt+ZkD9Dntmr3i7SrIduCZDDKoNjAYpUjOsf4tjBxBJEH2ZtZKdUxRfNb8qYb7+/zL2fvhP09lsbxLxHvlG41fjqwde3wi6dq67/xkLltshfT2dhvKv6f/lKGQP0MN+NFNV+wJYnOHFQ8S/GW3Ic2XZIEI0nfrg2rmfPc7FJN7ZR7PPHxcQtTyUy7Mu4Q7HeNt7KMtKus1z1BQqIBq9w0NDwmQWXSLtIdwo90yc5qIVuihHixuR5oWBjFKTHLpxE0YRJBaqnoL2WzmYieYqiAdM+KG3NLMaBQqD2g4xqcVzkJxoA0kDgrQ8zn0NRMklvdvoYBkTPlJIN8RC1oIKP4KdbeyRkVWW8IdSk0GWwT5TrtvHWjTKzxnNDJW1WylC6313GeSrVl/Xqo87nvUoy3z3GruUEEJJZRQQ4ui12lQgP4X2Vthesq+C+37sbepz3XWAvga/pktafcYygY+LZ1UiaHNpocLXIyu7f78nbAMDwNmEOfcwF+Fg8jdcfD36Qp1h2i9/bqH71UdidIy5uCqqb+iTt5+jR/X+C+OKss0X+549nm4aW9wmegiG+cyBu6VLfhtXEHDzbn4iRYCMEih3VR6+JQGJNgWDHhpo7gQFTcIo8MpmrWQ/8we7gNyJ6/sDT6tvbC94YB9GQNVAx9OKaiqzYVB5jjVAB18Wrn4lvDqC9C90bK6rTbOBHnhfwNTahUbn1Qf6j+UphFvhswpVaB/wsqyvh4XVEmTaT/OttzBDa6r+eifsD3E2qaOsRk5QIAiR1NA7bw1dipfwDSa+KWIF/sG7hDa+D3bGkWn9AMkUlUO1N5FIUujw6PtknOJA9BNpNoXX2sOa/fdLFqxg23SNi7GbPNSGS9eMTmJxhSiK9PEHFybOgcX1/pL7ihO69YiGM/dw5EGQgAfHFCNvfu6c6n7UxttQ9u9v+OyxrE/JU62Pd9JdR3W1GNa3eMhfJMbCofrp57WV/tRMAPoAnHbt41AiIyBwjXsM9+EiJjqlLv9vEWGqNKLGrRBcKzeG6DtY3ljBxhtA7Bnt6evPVWlDKbwfuFLTLNVld6jZ6OQ8o3ztahTx9h6H3phNsYqiC4mI145zbLbRuwWY20yZz4OzgrVi5B6oU4R5HwR7w/QZXDfZWkw0ds8vSkLlANM4fHbkCUMU4eFGgc8OVVagM4QKIDtWJtugonBsxUbc04381kdFKBx0zUSLzDMAq22akuA/uPsvps6buwk03KGBj6d38jWj2qaRn2TMlX9b12LebsnCTONuv0Ix8k2esNGGu0MdNL73CxmM1S6/bdkbpvnXKUOuvrh8bw3+HL4VRQ4gT/xDhA1WZsmqeGhksevaNgTyHbpt2PGgS1Ztvtm5vncZuroykpcF1PqwBuZZXILQ5n3WsOXbHlJFcyMVChbR9wdzA3+SdJutug4IIO2WVPu5yETo1cSiEHLXN5BMgn9q9nZ7RpMC2i9dUT1Fgz6Eejker9v5/7WLpuVjj+Ln8auiLxteZtG8v1e+Y3OUxsw5WvFnfoxhpzN0uRN5RshLO3i1A2xCBxvnofqL+Ksfbj3vlieEXcF6N5SNbh2Gfi9qK3qdRYLyl0pGse2osyJjSRKbnaVHNLiwGp9lWx8r5mYd3js4Af+WldbDAnnn7NI4tfm4dLJ5OLRaHaulfZvzIMDaHHS1gumc3dTavKhTBw2dst8g8OR7aHP5vljweHG1Ajhnshsr+q1kx+/ChxjEhl4/TkkkEEGqfPxPw/8FjEUUEE58Q/EgaIp8IyGdvfHqYiCYcCRmzhMggiSgIYZtgpGCFQ5/T8b7juJdgh+guY6+csN/kL6TLjtoYObMd/v4dvRw51Lk8llW1SkHONOonJ2kMGAW551Gvget8Nu/HezYtXd4Uu33wR9yF3MJXjv2cDNehNnkDm5GO0g7ONUhfjtDHyfY/o9gx46aKQmvN0ZtKlq6Dte43h/0+D81F2qDcLt1Exd7lyx70ieHnKZhWbQvvpmF9e9B4fGqyno+56RVxiuLYMujqjOW9mgmfYIcHMORvOTLff4LcLt1G5FuR2dWS+mBEjAySj3g8y2bg72T7bBBht5RkWzTX99yJ4ufza6j8452DiUWzqfuLoKuTEMqL95QXVkxG/tCDLdpOxtyR1y3bdhZl24/xZdC0sg2RWgTSY517Ct7lfAs5rB6haTmctFxbV7pYXfZbEWv76rswsLvQR4jqtD7BPb5AyUbNLZEp9//yKATjX8rz9QrGto6R3NHMxIzSMlYHyjjzI/oN1uy2UZOZwh+kDhWC5X3caLkKElrhBAB1Fi3SL+RA3xPvq0XBzfNjZYTioQb4Iwt+RwR9gt+4K7MNAmTEKDk9mEozR89T9Bu6xydnokOARAc+0C/kRmFMefFtfwJp2rMFHyOd1dXU1MiVffmBBnlGMD9DXQs3RORo6tvAhuiSudwqV9bs05CEAzbRvZr2AKe1xAbxyjvbmSIauNIHre7p48G0N1oIiO7eYzdtqYQuWbuZlO4s1mpdyIrRNAWxwpdT0Cf4Icu497JH69t5s1WNXuSBVeZ1JPz6e6AYfSsKP7OwG0C+CETGdwMZ3Em80aO4yGYAO0W7O1AzBoneXpslPksy+gp1BCBe34qZw64X05j6nsqVSOGJPYkc4TOhKoPcqjnlFc2OctIEC7XTvacOXgpUOzAJrWW79PNuJADS1U241kgVIQM9WWKQ2zmPOAtTgAckG+XbzBKOsqBpQIzQ8KlNyxvY0d9UaZhMypXH56oHeX5c/hZRL6NuKQ1+IwqWVSBM0pFtXlCaD7oUwcurLdDXydMPI5E3JEt53TNegtE4x4rFQN03MKhnU0ghKqX5HAEjmdnMJWPLuhrV/ZqvWNQImPmVDtpOdcQN/QSeefQI9faI7THyeEZ5kZwW1S8CKi1e7BH+NFhWUfjaH6BSAdOc152Hj/xkmrzSH6gpCxkO6WuIInssIVHN/KHoJB62xNZ80bTCRv5bprXh0jWJIFX1ZlGXYWESMdIr97f5B2AejQ6Vi90/plVm/gX6Fur8QVvBmV1/8+IECLdhddaF1zwgUpLy7jfqxxTfyeHqX83YPTLQNTYqhOEFyFR0zCmCDsNoA++Jtg0Kv8kIW2EsOVrEoZQyeeGKne89cqtaF1t0NNS2+sVBwdoF3byU5TrFV2r5sl5F7ROV4C9VuCtFsUQWhi4lZNm1u/hT9EmyWubNvYyixxX9207/A26FLzks3hSvLHRt+pAu2arvXlkvF5EgUXcQnmCzE7CdQGrc7Oxp+PGVAYnkEPG79vsX92SI3IDSr8qZ8b3YiF21Gl0B5d+sNZn9PZ0E4PiQwYcIgg0qiS31L9doqkBigA4KZxD9qry1UYJYIxygn8wOVtaha6Mej+oO8CDnry7ens41DB34ONCIcCMuigE7hzhxnnGoTb5H1yx95j2SH6cOQBozjD9I3IPPq+YUWcTvluyJEKb3vcJg462bkPoXzb9o9NrgzXbh585ci7A4WIg8bow7iJk5A7wkxuCKDv6jZyN3O42iYZqnnjwY3Cpd9HB0oJ9+Va78Kf3SMPvr01JQpaUXz7Esb9Nk5ClyHLLLpbl29mj/SfVvz2nT8e6vkdVLWTQ5VW2nqmQ8u2oPTl7fAPWc5/+w0xwGaDE8VhF3zOCaIXgu06vXldrw8cp86hPH2yglsMx/t1DfKv5Z4eNCr6IIIRxZFZp29G1CxpxXjxQrD8GXkTvIxVFqwWy3EB+h01HqMbUn7Q/vBvA9Cx028KGvyZouNB4g/CQfcSwOyyPNyWtEm/gWCUbSio/XBIgHZdoATRU7khmTmwzCWX4An5MUH0m0C0v6aUFDpwNIB+H+sTVtICjpkDj/legzfzpXPUu5AL/8QV8ksdDqDJ+jSXHqEE6w9qOvENPgK3JEtO6i7sSF0Xm7mviY5CBw4I0Ca5h1sC5La/W4uveaJDT9Xu4DNw5e7s19gft0gP505ah3P+89W9I4YOdGNu8W7xNxip3r3XsBZO/Yjx5FG8qZccvThEmjpXmOHpPxB7ANZPEEW6wC1o/bHicCm/W27K7yPfioqPZhJDAZ+7Pf8rdqmfre0hyXso/BA7NWpAlsq6VUzslSDZoh5t8gCNbpgybbRGnbLIqZUS/nOsjRF1sBRZTF/ENqne8UFTvV3aVeXG10iD3F/+NH6p3qnlnUvD9VkpZviQ1eyYZwQCdywXhCMmd+7ha7MGt41zAu13UF53hb/wFcj2mp4umqN30rRjviXmnH565xbilfNnQb7fbNtuBMsG/e3lTOInCLjaro61W823ZoPnuwQCaX665O/eEaKPQDdCAnSP0I4DK3SgD/T9fsuSyXhOQr+JOUPA1VbT0jlx6Msmz9aPII3tNfgdAB1a3Hridcja+3WQxJU+2Dhct5v9P2gD4Rsktlfiivkz3yQcFX+xXh2WxXXDEbvABzKTjk6WqODW/jX0O7rEiXTo2tsgOPqGxBV+WKPQDWVL2ASgX/DUeIar79Pv12ah/WzAQIaRtGWo140ZXY9s7mCnyyRzefPQAYVHKeF084boIXHluLEy31s9G24ctG+4enbwxJWb4P26IKaPxvrJ9mCRmCB9NoB2MfKEjuLYLwp6jQRf3u9Sb5xpbNfdXJRlG4Dv/wf5ej8QedkTC+g3PKy7vF83aQrVwxUuQSIbbJfNXlyjhwtcIYXMWznPlkV2CwwBLpJsoGmmctH0mzcZrW3pWmc5/38hGeOie+ihgwZu26zDyrHl1WNYa8+2MX4HQds4aO6kOjywfSw5XIStDl59Gwy1SE+yTRy0KkZX9QnrDL07rDZmsf5tAbPYtbmUbVuyQ57e8VO9fZ2F7ASVrfpnCugxZP9n6eALPrzYGDtZLHTvxKFDanbiMIJhfRdfhz4Nn0JC1OLwdRayDaOi+4M6Is6YSnyDDw97/PkKj7psRyEThWOnOfM96usgugGSgwG0v7Nw39xCAmj3p/5GKN9+ng3J/k3jYHrtEgfTBXcu9/BBlf+OB9AAP56Hm4gqBZ/0HHD7NUvSrchXqFA77gDQW3RJJIhGB2icSfM93FDHlbPKxtUKdpSrk16HERcX1zbZp13ggrW/DqBx9jv/3tBbdFw5quL0p1Zpl6azZ2RZLi62MDmTzIGZy6q34M/ELXiHy18F0FhWMv9eZeE7rhw3dqAP9F2TEfEfk4tDJPf5tiSXmH0WhEMnDoGWlw1Jy5Ug+mgMetg5fYt0hu73+x6uSJy34JBDDS200EINuWdstS107cOgfbcFFyNBiOKq9mfNbiMDx2ukfoAEBaD7Q00L9fvd5hzAoYIMopFBR5BB7cX1btaAcUZpnDg0tukuddhMvzcfq++NtwQW+Pu7ATT2tNw8h7kKmifHUK7BT8/F14dkBoXH5mibPHPWeFkXApKiarQL4N92SSHZNnFle4AeMoxRseDPJtPSeb52yKhovytzKEaTwPDvKrhRJpREwrFxry9oV5CzP20olhuHxvStuBij9jI3fG1Y1qvfFAliqKCFGuoRCyooQ3nQUq9aHOKH9829N4fofMMM/FhY/QAjPJBbVXrAqMVRe/RsFEu1QyUO21ocNcpcuXSRxDLcJQ73LhzXPwbgMJTeliF6Elbos9D6E8stGDSGszAOViuae/xSnJJ+TmMHk6qe+3Hv/Q0cgzHHxbaKo88uCV2dZjWG1d9+syj57dYhl8wCOwtA+2cWhivn7w7QeVDDCwv2bbsruCYn2wH0tu4j7EX847DB4FCOwuENdGkjPPBodRuVA+itkcD1/bJwSOAfB20KDv6F3bMgiSuuAB0FLh3JAn7bbnzcDuOx1ZLdj0EzFChwyZXzb09ROcyNT/NjLC1rNomKtncScsf7BESCPwiQxQyV2P9oY5K4Yr9vuk1LooCb7ZUrZJxLEvxXeEUveSB6oYccF7db4bW0Swf/gImxMTSDHmY8PETb45grEjApEnjr9Z8NF3uDEHupj5GwnxYXhsgCA7TtW4SMFXcxciQW4NGjGjjYJotSxExd3qJ0hGgGlcMvzdq5sk207LKbWQvn1GdCRYJkx9p3irAxPOQI/lu1mtQOESIu5hb59TDC7IoNPdDDrN+RZtheh3LUJfZvQO3VmxxcNDp3eMvaqWeNyWYUKTThjhy/XQeN4qhR+sv4aFyQcm9JYIArvSFaFbzCna4YIwLQHSXgvQ2gsO4AfbfiTnYLr0W1n9sTgPoAkGNjS+aOJMe0lVy22XbmGqBopu+R03XtIbXetomWW6e1eKN987WoGBLzdAEg9V2qXWDGf+m0Ghg1nePYUoOS3Rd8cgCIvhslOEVQOK1Pc3jWjSB298s4GEC7EkG72Kwcvd+p1rLlxmljq2XUIkA0R2H/04mJDMeoCMwxsl2a7dYGI8S1dvky+PEeX3vvqLmfPgSkhXzsFL2+aup13chwZdZo1wqt7TzAVR9vmBm9I9doO8rZ7J/ZbpY7D34PF/gxNolHCMnb3SJtlEPqWSdsaAXbwOB9ZZM/fdyBQwSxRjU+vJJZOeTOjK6Hb494iNpg7nu4jc3l5+4PBhGkEFkzhht8ILJn9yT7Hn7ggubQYZ7RGQ+d62dv587GGvg0cFybrx/c0QIoHEwBPfyVvpPPGprOwIAHU1dfB/0YJxRBpO0v+YNZkIojtEhvLQK2Y2fr0/RTQgIxxJBBiXK9fyGkfdwEnO8Ic+C2yZZW/GWoOlCOnxrZUGULiBwS71NZDRnikTQ/hDYOa0Q/yhEUlprXepA5jJOPjEFHCDiG9UE8l2Vo8FYbT1t8EEjFXg6uSoo3B3enBIatFbtGgUMOBdwRR66GAgqUJ0sPoN93I4Nb5kEHSq+Kh+5GTxFAswOBM6rzO0dWit8M0YmjgtboSzM9NOerkOC5PdAsrp+u2lUXzchS6n0fjFiFyBIL1gAdShe2pmpI4Sg4jxYdbFC3qLEVJq7F/1myDcepQGIXoRgTXjBZthMJuRu+A0N4PpxoXzu6ttbu4mBYgBZiVwRQDnYaloHNC90Ow0eAmWQz6MBSXRZse8eMLeEIkf/2FCnacNaxuGLiAdDscFQPyZ/xJ0CSsE36bAcfb9SrrHHkDmHETkW2KQF5hb9oKb7hGv5ixq928AkfG3YSucEHfBprIj/Q6rGpz7FMoj5aR6MGqwHFnyBTZDdY3/Bx6nrAvgB9DOmC9zQZoKND1LJQi5Khv/mnZ/jlse4TarQuxoFp/Wa6sDMShKkH3Vsr1l+EcqR7S+84LaG4a2f57T7gyFzhYwfoOApAP7anv6jxw/MRvsBfB6beba5najGNHV4y6G6jE+AOY4JvA26dS7ynp7ZI3x1nIJQN2tZ0EsZNWCNGzC6P56EccHVQ8E9Ro/bvUHokaGE4CbFNdInBM+Wr9ziWDRqtfMA/kBp6Yfvx30zLMD69LG4RpNpsPVx230v5E7O88v92XCSquOV+/HSTjMahi7j6WNc49K2IgEMMEUoRzh46uME1ILfhwk6G/eTTPdkVA3hmgfHx/eQjeDUqy+n37DHEDrmXc5bWwNXb2ile/49c0cfsyTUONV/uqYfq6OoO/q60SpWP2E/wqwc2vtVUO3qpzvPJf7EnKuhQEO20+A88OpWw2et0z3+mCj8ANHu2F1+2GO/hBheER2MQQTRChS0s9M9nfh2Epgeizhigp+rIV//FxsU+ffcf5/fNIJ6M5QOQH59eYoGdzgKbJaff4OKxcB9XjqybyPfQQwMNdHhuEsVTDinVw2g1Y3Jub1yFl00+fPJvBl8b1SpmEAGHCCKLUZ6OL87WF0/u301WUKfQuMdaugUzW8UQz9aETrcZJJA8YXbArm6BBjjmxBdAz3Vn+ow/WNr/z0RVp9ad3vhhH0D1mFhcBeZjzvt6/54zpd5ycR7T8slGpufyFn6/Vl/3wTk5iNwx3WxL2Xb8+ZMPYb5vt8PcvzZa/ny3KcF4VYc4r4a7jctD48wQhknOySeVf04zUSAAaPhVykryu4SRfpOQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJBI5R8aAhISEpJNhY1p/q9sbRISEhKS3SVZtei9QxWspBgJCQkJiZHEinqdd6jxGmWRkJCQkJjLvOv4He7QQg01tDM+XQfrsERCQvLW7C9GbS3FZpXx3l2iSWvoErJZZSEGMeSTitaTbqKDk5A/S4luYazmzxpdor/pLZVmKFY+VFQLXe+Lj0rae9yPPUe5136Pj5VqH3V5t3UmvN52/gSiqnV88kZiPVqWulKPgOjb4v8XhutwiCB5jv7wRtOqfeKagXzydLJR2MMdxBcj57LSEygBJrXJO8fqlfMSuQAAHVye5V3ZrERUL5mdXvBu61/06CPOgEMyFkF+6QQ8caBT4FQ5vu0VfiSdlzjEkI/felbZ/gcAcshWFZSXdZP7VbOeabXmV/VY9ixq/aia2sB19ssUimfF6fk9I4ihgb9Gu9EwwbHQsN6P9XJviGUj+Viflknvd4ObkSrkkEEHTFCrerrkuaCYe/98s9C1lodi8qqj1jC+r2XVjm80KO367RjEM9B9LfRGOG7ZrGdGP/sdCDR0+ucMGDSOtbmjsRK5jtf145NPnz2C+vms3eypugk4PRYpWANkPALD1bIGM4d6VoSzEzzhUORUVdG8Cnr0flTgHtoH9IKx656jzEY8uj41b6oFbKURvUR/BvA2q5vOnvWpVTrRwFVYSZxDBRwAGvjWzB1/dmR/QnRm3AaIzZawefuXavbL0qqd+noB5cbNbQaju+8RKoIMaqPGQHeoINEcAdnkoOPT5qiGXLJd+G5EuUXzoOq5Hfs2bYpXAO07RrklN0qgWFgDzdq7pQ5r4m49c6XHu0UWb1VK9SJsi6jKet4rBM0bZpBr6UphMYKFdM3XhrNezttmFU59tuwmLLUA6EgxUJXT8i8cA1gYJFA5LNlcMREMtY9eDTmqDS+zfrr0yaD9l2iECtD/Go8Mh8Lr+TMHgLabtVx6T7PzkM3bRBLNCAvQtfRN1VsJxnoqNYzWV++yGTwzwWcp9bS3a+zYCLF0BOjMqQUlt9hIxPuaLZClHov2DpkUpGtk1b47vJt466g8mE+J8iapI6iogVMHzv7PzS23Kbu2yrEFkPoDNN9Ea2UAnVnPbhVwK4+dMCATUrJ4sgXdx88jmmMZXhfNr1Q6vQY3fvg5tVf3YhYfAxIEhtZadNqNERSyliyhED2871aMCtP08jisJ0hvkk1snljHZtU84/SCTiz5X2E1N7U173Of23KDc59qriLrMwiG5qXepiH57GaLP8sX7yE2BOfTjdxs5y8EL9AaARVfwe3dij9nBuB7R+NUJverDe+XGh5Yxe9UW9lEKy8e7c6AI4srtBZgx70hWmfpTYy39gpKqKCSPn86cZZiWD3NntKcQ5uSKZnpJQ4Mz1N0Ka22RDsjrQ0u6OayhlKy8VWrzXE6rvnzjQdXfPLEm0JAYxPTCRRPne53sqO+DKJFgFZowXLo5Zsb2Ytzb6iqxngEDhmU2jvmjltAOrFQxZAb3OlfaJ2TRVONCWWIf02Ec5EYm0hKYBBr7b3T43+mOW3lz08puOpdOR6pEZ9MZ5G/DCLhGKQWoG87SxUKDzchU/LxSqUUooLaymkvozaJ1WaSW2LEa9WmQlAtrHDnPvH8iExk1cpYUQvoWSb4s3UwRWFK5wsn+9bdiqVm1myzXpgtIgNHYuYBz+tQIw65ZuRyBxadCZdYarCNuoRCqbjCkpevt9bE+CgdP7+XGZ87EmOd5IKrxh52WblreT0GOE5wMbBixYLoyVRkvFrvkEP03Lo4RJAprl5DCdm4yTPhPM1t8josqhzW7VTbC4M1GlmssUxxt0wKxtnzeR7fms9nsoT22BHWKifze2S0BaSGLiW7aA+5Lbpwup/uMJ5a2gVbD9dl62DoSK08ApnioK1aWu3innetw0h3xVIw83cjgOYaCGg1G12ijG+6exvZTDfyFGme1ati+UuxMS21uPKSz2dWJ8zI2iARa0Y1tUCCVLs9VKvrxBoGXQo2nkecnKEy5E6gZr5ERGxApeo6JlI4+NAzj4Npaa1SuePRVbcd1NYxtrXHUmiNt+vS+P2n5jSVDhRaZhw7zZYJyy0U41Sghdfp7KCV1dW44aao/mVubSvPNVpcWulkbb3i71qaERmPe23ghi1W76ECaC6E7NczGE5g6QjQmSGDLqy4uckSKi0NNpHHdqA7SdRWjCO3hAc/lsatmXymYEeZMfPgRtu6CqIKCVC0GjhMEGzEU4PBfWUGsjf5ubox7QwmrVMs8LDxlVBDoThZJNb6nEIJpURbc+snTS23sdcZrrAwgBUG+hAvAHquH/lTzwooJr6TcrGNCABaBTK1o4mjdDgk6pUz8VRHkWJXnkdJtY0vsVACk7cr0NIgEus5f2zkrWBcYouzVGU03q31YmGQQgG15O91rDSxHrclQ4ucjFf2a8su2A7P4YgF0LhXix30JIFEuMWlDuP0OBMUgpNApNl6WsE2JQToxHrR64NRTMwJraXjyp9/lBZOoxrBxldbuCFMWJF63G2WRObghEohlSSacwuALo3OANigkqJFKMdQQAnVarQZkknCJCbYzulYoNnGbVaby7Vja7IUI+pJ7mhAjFdaLjdx3J8RLWJsHVf4n9kfysv9MIkicG3tDC7586lcBdMtv65poZmbpGrUMJTRAqbA+36qsisRcqmZHr6Ui8XcDq1KS0+kb3qR6ApOvb1e8t8Ykirva1PE6AZf8Akfj6I2E8EpZZUZzV7iOK6mf4M7m+a/sf0VZvmwSPE3qVIjbsbvfoO/o+YwyTUZAMCfxeVuCkgz/1PdyzItQKcWgyCf5IuhYkeKKekET+cC5QkylKm2H460HWQOMSE9wjINV6svUjLOC8qde5QxMJ3D1GIzPk/nu37Xd2DKNWGzthrh2n/p21V6zaFGR/NntezlAM2cADrW8uo11MSKZWRTavFm+FyqunBXq/v1luPnIxeL7cBNOBSWTy0Dp1549e0BOnEe0a03KVPgZShtksKWr90CoLeqlc4EtRd1AB1rKV0hyLcGEUBfpa/JBaDJDCxgImBKNDCaIKmSiv1OuZTqfler+3UKsMNuCqnaDiJjYO01s2ebQt4bchImvW63E0BfDwRTNqaLNEDZ2f0Bunf4jT0fFuuhrpVGabwpNtArT0PNSAr4ypMxzP/tz+rRbhbKbWLrXKsaWzzuVfP3rgYHHZxHT+jkTpBrC+fYzX06pZGDG6uQzihQo/BxZnyiuHneKYYKWiH3V29bN8SZ8d9I+GyOPhSgwamLnUaD5ZpSQg31ytrfaHW5MDxbPtZoquDQ/Tjj8wzaCAC6NUCrICYWLDKzBbP8/3MDR6c0gPipfmfwXKple7PcyW/GitIjLOPGSS2XI9Rr1bF89nnAk9Tb0MAk160gBg6pMIGXKfhXcxhIWZotfuCmdApncGRhu9+fS7bxCpKxM5MdQA96ZkZcriPgxpOR6CcsvXs6mfNZFZphJfR/BIu+Mzykc2OAZgomfrVimrag1hgw2sjZAGAn+O0xG4Rl0RmpYwIVanOAVKo7V2OgFHX8yydBVevznbph0XEMHHNXZgNXALgKokVe3z8yh94foLOVHpTKFl6N0brnRsTlYTjLJ90R2WxUBo3vgT1ZeQ4RKIIcSsOIQvPKxvJeLKIYwAIhjeAld23Kd4FW7UAdnzyPK5ZX47ApI4kR0Ws+j62iEcFDKoM46MQirrdUVviOn58hOUUde10iRLubSOEZEVxJdN43NyBDykgUb+GYiSryd40dVt6jmt3jdHLXjp55CdO71tiRzHIvHt1No9mzR+OHTWYptR/qOcTUC0AojdJCcm0mVOVQ28N+ol+bQ4WWSqsugnRUgLZrWNVqNi0dQMdK5c8s6IJ9nd8aLScvJEBH0o0j9dRUOUCzwwF0ZU2ZKi2UVlAJdaASrCybYv13DXEpLNZkPtfHP0I7aiddyonkGNbBtzJiggmuILM34psCZG+jU0t7u6TqoMw2PezZRMd+WxlqikX/QL29b1jAGZRQQ6W0Pv8EHAP1+B8nRnhpf56uzD6QHTqkZvKDjCtbMVeV4e/b6sq50iL9/XQVlsqR5lCM8/j0OfwRqqpJukqyeIReYbnhE/7EtfbPbZcRUyqQveL2Gy4DVTCSzb2ulhHAsRJmZbCTSyofvOD5a0fr51Es0Hy2sprZWuyUK5MbXJvEVC6Wa2KwSDPJOv18pqxUkti3CPJnb8IbfD5W9h/hBfVqwBZqdAW1uykWsgNR1DXfnOX0b6lgdm/1ZRm+OAQaYT7tNzo8rwH6DPHC8+W7JD2q3NgUSDDlyzpxKVl0FpxurR/jCoughBpySCAGDhHEkEA2BvuxcY4/X7MuA2idkWO+X18MgH14uNhwI9j26HNWYcqwMTv5tDYvpFYQ3cO39Ix1gw9k44Z4DPrDs8slzN5WC71TzAdDGylaXwNEf1v+IpJCdA+f8DWO89Aur4IaKqigHKM2hg359S0FQOvTVZLZt69PRgxKI8fcLNIcBKBxlZPvtAz85Rs+LGckFVg+VUWu/sJf+ITvZ+hRDzf4gQ/4CBSD3J8ORpaGijVAX4Nw6JBvz1DnbtuN9Ac+LI1fkcIpeoH/wvfkelOC1cMVPuHvcn7/I7nUVdHgiUM/Y8K3SdD1TRpnEa/+7mq9qFzcbPJfdGPAeI+qjFyhclsCtItN9QY3SK1KJOXG22w/Y4DDTPqNSDM5gjLgwFeJKHbFibbZpHVb3vz52fgWzGgFpHBxPCXww1XjwJuP/pmtN4xgtEqF65Rr4i/kVltfChcp4ejhBy7AIZ7k+vbQQCM7Xf5HqvydtAJ0AbeZmlxn/x1Lmfe8coeMpeOCmDp3rEe/I9NuCLhvh8/WL3CDzEIhM0OA7tA3q2ZlI+SQz05py3t2imXPJokE+/HnePFM1QKg1cDFIUEr+LS/sQdPltsWg2x29us0AP8FV6sqdjl8KK/XmJ8Y/0gvorIn59Jv3hRHk3SxvBpE7ucGYb3mfsw67loN0NgSKZXAnXt/wV9jY0dsOEZbgF83s+Ctx6BzPPtsBTqp8Lw6ML7Hx/YK+8tWVea48bj38D0xXZjU97nBxzMSw2RdounSH+nfmHr155DcGb/EVcGMVHCAd1BqDO7HEZdgg7SMTZ7ON3G5gY+5s0IhSdBl2ltueBf4C1fooJ9Z+0wAOtoAREDDf/237OMlffe737+TmC6+4GJhZb7CB3wbvQ3Dm4U/CuA1e+zbaoGYDZobQNsuoq0BOjEGaDnXjoyXO1fcy39ZXNYuC5QxCr28O/iEv/BXoImN5iywr+Cw32MXTjrWxnGBL8E2rvrFj1CvAq6JP04cV2UKMav/drNmRi4vrtrJXk/eKVtV2dnCVJ1ZGmemLLsXTlsDNdR9G4yy2bW25KNi1qTetrBaKrgZS7DimGPHu78vg8aVDr7gU6vNaOP5x4Ibi5laZ8GNzcC/QSt7zxUDNV2sqiR1G3VXfdu8cCkzfjvzbdNdfqZh8zss7w6RpajHhSH1oXHlzwztSvZjeTSAZoeOnr4GCwxdyX80QKlbBI0QilLtortpllGqYAgNgqrOQfmmOBhGFveLUFpnce+3u6Hy1SuAppTQPi1He6d3SZQjet0tZSOVrEBxvIuqpkQyCys7J5dlG/3GnTZ8QL1/cpO+6J7YhKCrjqarHBYry0Iy4wkzLf2pqnPWWoxXbVHMknuWjoxRa/7pJFeWcjR5K9fE8BS1/pyucl+KAi6tdUnTZKWfuXK7j43L+04lQ644p3oDv2vLq8nl0l9grGAbiayqMgYwcehZn4wJ636n+3tVx2pzP3Wi2OGWkZE/ClVJjO8XKQwF5vs9MwQu+anmZrm0Kqg0VW1/DH0G+BytRzRx6A1wmRUPY5BDBdVqOTLrd0kW3/tUJMYPK+SmnFF89hkbNbjbk0HLr2WvKTGUgnk1X2f9VsOk5huFw94iLtJvvh+bcmgb/mzLfsX3q604cex1Pzz+HBmOa+nQjsH+XGDDoFuNHkSQQQ7Zwm2mq/RbWqyOSsiY7LlctHgmEx6fOKyw1HF2olG3WwUFSVHPTrE1H3dfEQxSyGf5s7Hhs+cBGyCgGDnkO3VleCQGpyuknk+eWU5w7nm/yGqBmWxgNdpyyA3BqTDa7GL0g2buWKQ+lW55mWWZf5MRqY3G4G74jtxoe2itqVPmRHriyfZRKc4emFtzYr2BJo4zyp9I0z7HvTLs4ZRvbFSx2hfVQJJ5L4BIyXR0LDFzaG7k0/rK/n1Tj8ZeJYKFXrwRptZbQmn8Vm6sonTSpEjxjEzZWcW0sVoiZfO2W++S098N57CwXpsumx2fbQTyU0vmfNKxWx014opf6kI6/tndEOWqYBZ9BGO9emdkit+ZWoQypQK67GzirncmC/euhOjc4chcOB6zuQKy7g7WttpoMcWGYFZ6nkPseGJrOJOp1eZvQiL44rmmI59ZEovCcYUk1qaa2tpwyAz1w/4E6Xp+lul44eT8rQTnjiXmVZZGlfu20R2VI6ssEQ486kHPhcrCNV3sEsftSHY/pjTGyBlt6wQQmeIJ707RG/VqfpjFaaa2GD8XJpVrgDQ30pvI6vzyADhucCwWzbNd58PEuTVypHmD1PKd65X+JCstlc9hhdjvMbXeenTeMhGhYys9KSRaXBhs0f7xSshGDt0+kaAEMpWaYc8XA59ouFGiVXo1xOSLfLNU+f3aiW88fruMQkmUS//uGFxXCzsgg+E7xlamA9uFmmlHab1txiudEWuq/tr3SSH1uUvprqAdui2lMNCfAmXzmm/zsVEb1AoySCGBFHLD9qrDmCSOhMN+DYq3ZZMu3MXEXcyEqymT0ox6hTMtIg0JYuTQL7YWhf6bQFkNJRSQaeE8MVIPXRR3C5XR/WQdyri2//DrTsOb5dp7tc5+40qyUHOIIYJI+ayZ8Unidd3EIhHHdJRKyCCDHCrh3FUe8H+HGgpIIYEIIoikm2RuZHZ46GsKEUSQSTc0k0XOjXqx15BBDJGGSJh/CuE4tka/ZIZ40xpty9MVWxk/fwst1NBK7vGgG3epnuWQQ6l8wh0qupSOD5IjJRfgKFdtDGFcywRNPpmEa+RIS8VkK/CNlrHhMbnx78ycYAna6OSKe7RI94i0kUB2nxiBP4f4pFYGviXAcWe0kY0Q5np6kcfa+Qq7FAuIHWN1RdzbbX+JPGDkcVi1g7DcczOIPVnhvxZq76cUBQrscYtlYhYHfw8GKjYeC9P5NjPx+G7vZk74kJ9o8RSlJZHwtasvr4W5TVWeq7/drx5i5ejGKJGSFYZtonIE58Lp+O+6KbTKsjcx6nKpLTPfsLai9aYQW80IC7ZtuEQNRVB6wl2CPrc+xRDCfdrV9mb7e4b2XjXyOWu6kUcbUMCgHLpy/J3vDpNYLqVW6OaxuV9luQfra5JVSEulQDpOpSibQoTKozDZ6N1wO86d75hNtro7OptziTcK9Sk9tUc/89x6s6jRNh9m6Z+YUsBggXX/GPvTX8uygQ/jXPNyAiNfKP3SGMSQAFeWEu2hgwauKGXro/F+uurDN7ga1b1jUED0bJo6NN7qx78Z/kxcavHx3Q6ascoZjjDIIX7eVV5FoocebnCTjmkEMfDnVdjY8HR6BTY+/49RrT02bq5s8Xv979hkDHu4GlS0fvySQzx5C7U8RuQ169nT7POYq+mTMMF8Pr71ekM2Xvdbq0sxZM8nfTU/7oFr5/J199f9++efTcePLd73Iqgpk0ECovKgrys/Po1Ryd2lHq1XxPCmt3Fe+VhWij3foTfsesLGGRowbamVMSQQaZpAd9DBDbl2pCNADwPHYOjgZQMOjxJCN8QaxcPz8BGm+XMxduOgdejVWiPg4x0fU9Y/4dL+fo9n7ifwPF3ETAoJYeQFIVy42LpxbG2vKIMF16v0xr96Lb/OYTQeWsUmY8EmXeD75+wvdZ1N/vbFCntYl3bqAARbDgOb1gZ80h39AU9sMgLruewnG8N8RJdayKGfPXOvGEsmaLnbO865WAPY5E/61ajxydYGDnXXVQW5XrrAx/Gd4kzwokj/H1a3vR+99OQiAAAAAElFTkSuQmCC" alt="Keystone Wood Specialties" width="720" height="390">
+  <h1>Logo engraving proof</h1>
+  <p>Check your logo, size it on a drawer side, and sign to approve. <a href="https://keystonewood.com/laser-engraving/" target="_blank" rel="noopener">Artwork specs</a></p>
+</header>
+
+<main class="layout">
+  <div class="mobile-flow" id="mobileFlow" hidden></div>
+  <!-- ================= controls ================= -->
+  <section class="panel" aria-label="Logo file, checks and approval">
+
+    <section class="step" aria-labelledby="s1">
+      <h2 id="s1"><span class="n" aria-hidden="true">1</span> Add your logo file</h2>
+      <input type="file" id="file" class="visually-hidden"
+             accept=".png,.jpg,.jpeg,.tif,.tiff,.pdf,.eps,.ai,image/png,image/jpeg,image/tiff,application/pdf,application/postscript">
+      <label for="file" class="drop" id="drop">
+        <strong><span class="for-mouse">Choose a file or drop it here</span><span class="for-touch">Tap to choose your logo file</span></strong>
+        <span>TIF, PNG, JPG, PDF or EPS · 1200 DPI at actual size is best</span>
+      </label>
+      <p class="busy" id="busy" role="status" aria-live="polite"></p>
+      <figure class="thumb" id="thumbFig" hidden>
+        <canvas id="thumb" width="360" height="120" aria-describedby="thumbCap"></canvas>
+        <figcaption id="thumbCap"></figcaption>
+      </figure>
+      <div id="keepMarksRow" hidden>
+        <label class="choice"><input type="checkbox" id="keepMarks" aria-describedby="keepMarksHelp"> Include everything in my file</label>
+        <p class="hint" id="keepMarksHelp">We left out a few small marks or a border that looked separate from your logo. Tick this if they’re part of your design.</p>
+      </div>
+      <dl class="facts" id="facts" hidden></dl>
+    </section>
+
+    <section class="step" aria-labelledby="s2">
+      <h2 id="s2"><span class="n" aria-hidden="true">2</span> Quality check</h2>
+      <div class="dpi-readout" id="dpiReadout" hidden><output id="dpiOut">–</output><span id="dpiUnit">DPI at this size</span></div>
+      <div class="verdict idle" id="verdict" role="status" aria-live="polite"><b>Waiting for a file</b><span>Checks run in your browser as soon as you add one.</span></div>
+      <ul class="checks" id="checks"></ul>
+    </section>
+
+    <section class="step" aria-labelledby="s3">
+      <h2 id="s3"><span class="n" aria-hidden="true">3</span> Sign and send</h2>
+      <form id="sendForm" method="post" action="/api/send" novalidate aria-labelledby="s3">
+        <div class="field">
+          <label for="company">Company <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="company" name="company" autocomplete="organization" required maxlength="120">
+        </div>
+        <div class="field">
+          <label for="custNo">Keystone customer number <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="custNo" name="customerNumber" inputmode="numeric" pattern="[0-9]+" autocomplete="off" autocorrect="off" spellcheck="false" required maxlength="20" aria-describedby="custHelp">
+          <span class="hint" id="custHelp">Numbers only.</span>
+        </div>
+        <div class="field">
+          <label for="contact">Your name <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="contact" name="contact" autocomplete="name" required maxlength="120">
+        </div>
+        <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="field">
+          <span class="label" id="sigLabel">Sign to approve <span class="req" aria-hidden="true">*</span></span>
+          <div class="sig" id="sigBox">
+            <canvas id="sigPad" role="img" aria-labelledby="sigLabel" aria-describedby="sigHelp"></canvas>
+            <span class="x" aria-hidden="true">×</span><span class="baseline" aria-hidden="true"></span>
+          </div>
+          <div class="sig-tools">
+            <span class="hint" id="sigHelp">Draw with your mouse, finger or stylus.</span>
+            <button type="button" class="small" id="sigClear">Clear</button>
+          </div>
+        </div>
+        <div class="field bot-check" id="botField">
+          <span class="label" id="botLabel">Security check <span class="req" aria-hidden="true">*</span></span>
+          <div id="turnstile" aria-labelledby="botLabel"></div>
+          <span class="hint" id="botHint">Loading…</span>
+        </div>
+        <p class="send-warn" id="sendWarn" role="status" hidden></p>
+        <span class="inline-error" id="sendErr" role="alert"></span>
+        <div class="actions">
+          <button type="submit" class="primary" id="sendBtn" disabled>Approve and send</button>
+        </div>
+        <p class="hint">Sending emails your signed approval and logo file to Keystone Customer Service.</p>
+      </form>
+    </section>
+  </section>
+
+  <!-- ================= desk ================= -->
+  <section class="desk" aria-label="Sizing and proof">
+    <section class="stage" aria-labelledby="stageTitle">
+      <div class="stage-head">
+        <h2 id="stageTitle">Size it on a 3" drawer side</h2>
+        <div class="seg" role="radiogroup" aria-label="Preview">
+          <label><input type="radio" name="pview" value="side" checked> Whole side</label>
+          <label><input type="radio" name="pview" value="close"> Close-up</label>
+        </div>
+        <span class="scale-note" id="scaleNote"></span>
+      </div>
+      <div class="drawer-view" id="drawerView"></div>
+      <div class="slider-block">
+        <div class="slider-head">
+          <label for="sizeRange">Logo width</label>
+          <output id="sizeOut" for="sizeRange">–</output>
+          <span class="dpi-chip info" id="sizeDpi">Add a file</span>
+        </div>
+        <input type="range" class="size" id="sizeRange" min="0.5" max="6" step="0.25" value="3" disabled aria-describedby="fitNote">
+        <div class="ticks" id="ticks" aria-hidden="true"></div>
+        <ul class="legend" aria-label="Slider colors">
+          <li><i style="background:var(--pass)"></i>1200 DPI or better</li>
+          <li><i style="background:var(--note)"></i>600–1199 DPI</li>
+          <li><i style="background:var(--fail)"></i>Below 600 DPI</li>
+        </ul>
+        <p class="hint" id="fitNote"></p>
+      </div>
+      <details class="tune" id="tune" hidden open>
+        <summary>Burn tuning (Keystone only)</summary>
+        <p class="hint">Adjust until the preview matches a real engraving, then copy the settings into <code>CONFIG.burn</code> in index.html.</p>
+        <div class="tune-grid" id="tuneGrid"></div>
+        <div class="actions"><button type="button" class="small" id="tuneCopy">Copy settings for CONFIG</button><button type="button" class="small" id="tuneReset">Reset</button>
+          <label class="small-file">Compare with a photo <input type="file" id="tuneRef" accept="image/*"></label></div>
+        <img id="tuneRefImg" class="tune-ref" alt="Reference photo of a real engraving" hidden>
+      </details>
+    </section>
+
+  </section>
+</main>
+
+<dialog id="sentDialog" aria-labelledby="sentTitle">
+  <h2 id="sentTitle">Sent to Keystone</h2>
+  <p>Your signed approval and logo file are on their way to Keystone Customer Service. They’ll review the file and contact you if anything needs to change.</p>
+  <form method="dialog" class="actions"><button class="primary">Done</button></form>
+</dialog>
+
+<script>
+"use strict";
+/* =========================================================================
+   CONFIG — Keystone settings. Adjust here.
+   ========================================================================= */
+const CONFIG = {
+  minDpi: 600,              // minimum acceptable at 100% size (keystonewood.com/laser-engraving)
+  idealDpi: 1200,           // preferred
+  maxWidthIn: 6,            // slider max (also capped so height stays under maxHeightIn)
+  maxHeightIn: 1.75,
+  minWidthIn: 0.5,          // slider min
+  sizeStepIn: 0.25,         // slider snaps to this (0.125 = 1/8")
+  defaultWidthIn: 3,        // starting width when the file doesn't carry a usable size
+  defaultMaxHeightIn: 1,
+  drawerHeightIn: 3,        // drawer side height used for the preview and the size limit
+  drawerPreviewLenIn: 9.5,  // how much of the side (from the front) the preview shows
+  closeupMaxZoom: 4,        // close-up view zooms in up to this many times actual size
+  // Burn look. Open the page with ?tune to adjust these live and copy the result back here.
+  // Burn preview: same tone pipeline as Keystone's Bubble engraving preview.
+  // luminance -> black/white points -> gamma -> darkness -> white floor -> dark clip (-> optional dither).
+  // With these numbers it's nearly a hard cutoff: luminance 146 or darker burns solid,
+  // lighter tones only get a faint tint. That's how the laser handles gradients.
+  burn: {
+    gamma: 1.55,            // bbGamma
+    black: 30,              // bbBlack: input black point (0-255)
+    white: 225,             // bbWhite: input white point (0-255)
+    whiteFloor: 175,        // bbWhiteFloor: the lightest a marked area can get (0-255)
+    darkClip: 0.75,         // bbDarkClip: anything at or below this burns solid
+    darkness: 0.55,         // bbDarkness
+    dither: false,          // bbDither: ordered 4x4 dither
+    ditherDpi: 300,         // dither dot spacing (lines per inch)
+    skipWhite: true,        // white background isn't engraved (Bubble tinted it to the white floor)
+    spotIn: 0.003,          // beam spot: edge softness, in inches
+  },
+  // Keystone drawer boxes are hard maple. base/late = earlywood/latewood; burnDeep = color of a solid burn.
+  woods: {
+    maple: { name: "Hard maple", base: [234, 214, 176], late: [206, 172, 124], ringFreq: 2.2, ringAmt: 0.30, fiberAmt: 0.22, burnDeep: [24, 16, 11], endGrain: "#e2c9a0" },
+  },
+  // Dovetails: 3/8" long, flared, 1" pitch (sizes measured from the Keystone proof template).
+  // anchor "groove": the pattern is offset so the bottom groove sits centered in the gap between
+  // two tails and never cuts through one. anchor "top": first tail at firstCenterIn (as on the template).
+  dovetail: {
+    lengthIn: 0.375,        // how far the tails stick out past the side
+    pitchIn: 1.0,           // center-to-center spacing
+    anchor: "groove",       // "groove" or "top"
+    firstCenterIn: 0.36,    // used when anchor is "top": first tail's center, down from the top edge
+    rootIn: 0.46,           // tail width where it meets the side
+    tipIn: 0.58,            // tail width at its end (the flare)
+  },
+  grooveFromBottomIn: 0.5,  // drawer bottom groove: distance up from the bottom edge...
+  grooveIn: 0.25,           // ...and its width. Logo must stay above it.
+  thinFeatureIn: 0.008,     // strokes thinner than this may not engrave cleanly
+  softEdgePx: 3.2,          // edge softness (px) that triggers a note
+  enlargedEdgePx: 6,        // edge softness that suggests an enlarged low-res image
+  padding: {
+    excessiveFrac: 0.50,    // say so when more than this share of the file is empty space
+    groupGap: 0.35,         // marks closer than this (x the biggest mark's size) count as one group
+    keepGroupFrac: 0.15,    // separate groups at least this big (vs the main one) are kept; smaller ones are stray marks
+  },
+  maxUploadMB: 15,          // email limit is 25 MB total after encoding
+  analysisMaxPixels: 16e6,  // big images are scaled to this for checking (Safari canvas limit)
+  // Drawer diagram geometry, measured from the proof template TIFF (drawn at 1/3 scale):
+  diagram: { widthIn: 6.0875, heightIn: 1.7517, frontEdgeIn: 5.105, topEdgeIn: 0.39917, scale: 1 / 3, fromFrontIn: 3, fromTopIn: 0.5 },
+  libs: {
+    pako: "https://cdnjs.cloudflare.com/ajax/libs/pako/1.0.11/pako.min.js",
+    utif: "https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.js",
+    pdf: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+    pdfWorker: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
+    jspdf: "https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js",
+  },
+};
+
+const $ = (s, r = document) => r.querySelector(s);
+const S = {
+  file: null, kind: null, fileDpi: null,
+  srcW: 0, srcH: 0,          // original pixel size (raster)
+  scale: 1,                  // analysis px per original px (<= 1)
+  dec: null,                 // decoded RGBA kept for re-analysis
+  a: null,                   // analysis result
+  pdf: null,                 // { hasImage, renderDpi }
+  aspect: 1, widthIn: null, sizeSource: "",
+  engraveBlob: null, engraveUrl: null,
+  boxH: CONFIG.drawerHeightIn,
+  wood: "maple", view: "side", showDims: true,
+  checks: [], verdict: "idle",
+  sig: { drawn: false },
+};
+
+/* ---------- small helpers ---------- */
+const fmtInt = n => Math.round(n).toLocaleString("en-US");
+const fmt2 = n => (Math.round(n * 100) / 100).toString();
+function frac(inches) {                       // nearest 1/16 as woodworkers write it
+  const s16 = Math.round(inches * 16);
+  const whole = Math.floor(s16 / 16); let num = s16 % 16, den = 16;
+  while (num && num % 2 === 0) { num /= 2; den /= 2; }
+  if (!num) return `${whole}"`;
+  return whole ? `${whole}-${num}/${den}"` : `${num}/${den}"`;
+}
+function loadScript(src) {
+  return new Promise((res, rej) => {
+    if (document.querySelector(`script[src="${src}"]`)) return res();
+    const s = document.createElement("script");
+    s.src = src; s.onload = res; s.onerror = () => rej(new Error(`Couldn’t load ${src}`));
+    document.head.appendChild(s);
+  });
+}
+const busy = msg => { $("#busy").textContent = msg || ""; };
+const nextFrame = () => new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const todayStr = () => { const d = new Date(); return `${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}-${String(d.getFullYear()).slice(2)}`; };
+
+/* ---------- file type sniffing ---------- */
+function sniff(b, name) {
+  const ext = (name.split(".").pop() || "").toLowerCase();
+  const str = (i, n) => String.fromCharCode(...b.subarray(i, i + n));
+  if (b[0] === 0x89 && str(1, 3) === "PNG") return "png";
+  if (b[0] === 0xFF && b[1] === 0xD8) return "jpg";
+  if ((b[0] === 0x49 && b[1] === 0x49 && b[2] === 0x2A && b[3] === 0) ||
+      (b[0] === 0x4D && b[1] === 0x4D && b[2] === 0 && b[3] === 0x2A)) return "tif";
+  if (str(0, 5) === "%PDF-") return "pdf";
+  if (str(0, 4) === "%!PS") return ext === "ai" ? "ai" : "eps";
+  if (b[0] === 0xC5 && b[1] === 0xD0 && b[2] === 0xD3 && b[3] === 0xC6) return "eps";
+  if (str(0, 6) === "GIF87a" || str(0, 6) === "GIF89a") return "gif";
+  if (str(0, 4) === "RIFF" && str(8, 4) === "WEBP") return "webp";
+  if (str(0, 2) === "BM") return "bmp";
+  if (str(4, 4) === "ftyp") return "heic";
+  const head = str(0, Math.min(b.length, 1024));
+  if (head.includes("%PDF-")) return "pdf";
+  if (/<svg[\s>]/i.test(head)) return "svg";
+  return "unknown";
+}
+const KIND_LABEL = { png: "PNG", jpg: "JPG", tif: "TIF", pdf: "PDF", eps: "EPS", ai: "Illustrator (PostScript)", gif: "GIF", webp: "WebP", bmp: "BMP", heic: "HEIC/AVIF", svg: "SVG", unknown: "Unknown" };
+const ACCEPTED = new Set(["png", "jpg", "tif", "pdf", "eps", "ai"]);
+
+/* ---------- embedded resolution ---------- */
+function pngDpi(b) {
+  const dv = new DataView(b.buffer, b.byteOffset, b.byteLength);
+  let p = 8;
+  while (p + 12 <= b.length) {
+    const len = dv.getUint32(p);
+    const type = String.fromCharCode(b[p + 4], b[p + 5], b[p + 6], b[p + 7]);
+    if (type === "pHYs" && len >= 9) {
+      const x = dv.getUint32(p + 8), y = dv.getUint32(p + 12), unit = b[p + 16];
+      return unit === 1 ? { x: x * 0.0254, y: y * 0.0254 } : null;
+    }
+    if (type === "IDAT" || type === "IEND") break;
+    p += 12 + len;
+  }
+  return null;
+}
+function exifDpi(dv, t) {
+  const le = dv.getUint16(t) === 0x4949;
+  const ifd = t + dv.getUint32(t + 4, le);
+  const n = dv.getUint16(ifd, le);
+  let x = null, unit = 2;
+  for (let i = 0; i < n; i++) {
+    const e = ifd + 2 + i * 12, tag = dv.getUint16(e, le);
+    if (tag === 0x011A) { const o = t + dv.getUint32(e + 8, le); const den = dv.getUint32(o + 4, le); if (den) x = dv.getUint32(o, le) / den; }
+    if (tag === 0x0128) unit = dv.getUint16(e + 8, le);
+  }
+  if (!x) return null;
+  if (unit === 3) x *= 2.54; else if (unit !== 2) return null;
+  return { x, y: x };
+}
+function jpegDpi(b) {
+  const dv = new DataView(b.buffer, b.byteOffset, b.byteLength);
+  let p = 2, jfif = null, exif = null;
+  try {
+    while (p + 4 <= b.length && b[p] === 0xFF) {
+      const m = b[p + 1];
+      if (m === 0xD8 || m === 0x01 || (m >= 0xD0 && m <= 0xD7)) { p += 2; continue; }
+      if (m === 0xDA || m === 0xD9) break;
+      const len = dv.getUint16(p + 2), d = p + 4;
+      const tag = String.fromCharCode(...b.subarray(d, d + 6));
+      if (m === 0xE0 && tag.startsWith("JFIF\0")) {
+        const units = b[d + 7], x = dv.getUint16(d + 8), y = dv.getUint16(d + 10);
+        if (units === 1) jfif = { x, y }; else if (units === 2) jfif = { x: x * 2.54, y: y * 2.54 };
+      }
+      if (m === 0xE1 && tag === "Exif\0\0") { try { exif = exifDpi(dv, d + 6); } catch {} }
+      p += 2 + len;
+    }
+  } catch {}
+  return exif || jfif;
+}
+
+/* ---------- decoding into RGBA for analysis ---------- */
+function targetSize(w, h) {
+  const s = Math.min(1, Math.sqrt(CONFIG.analysisMaxPixels / (w * h)));
+  return { s, w: Math.max(1, Math.round(w * s)), h: Math.max(1, Math.round(h * s)) };
+}
+async function bitmapToRGBA(src, w, h) {
+  const t = targetSize(w, h);
+  const c = document.createElement("canvas"); c.width = t.w; c.height = t.h;
+  const ctx = c.getContext("2d", { willReadFrequently: true });
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(src, 0, 0, t.w, t.h);
+  return { rgba: ctx.getImageData(0, 0, t.w, t.h).data, w: t.w, h: t.h, s: t.s };
+}
+async function decodeRaster(file) {
+  const bmp = await createImageBitmap(file);
+  S.srcW = bmp.width; S.srcH = bmp.height;
+  const r = await bitmapToRGBA(bmp, bmp.width, bmp.height);
+  bmp.close?.();
+  return r;
+}
+async function decodeTiff(buf) {
+  await loadScript(CONFIG.libs.pako);
+  await loadScript(CONFIG.libs.utif);
+  const ifds = UTIF.decode(buf);
+  const img = ifds.filter(i => i.t256 && i.t257).sort((a, b) => b.t256[0] * b.t257[0] - a.t256[0] * a.t257[0])[0];
+  if (!img) throw new Error("No image found in the TIF");
+  UTIF.decodeImage(buf, img, ifds);
+  const rgba = UTIF.toRGBA8(img);
+  const w = img.width, h = img.height;
+  S.srcW = w; S.srcH = h;
+  if (img.t282) {
+    let x = img.t282[0]; const unit = img.t296 ? img.t296[0] : 2;
+    if (unit === 3) x *= 2.54;
+    if (unit !== 1 && x > 0) S.fileDpi = { x, y: img.t283 ? img.t283[0] * (unit === 3 ? 2.54 : 1) : x };
+  }
+  const bmp = await createImageBitmap(new ImageData(new Uint8ClampedArray(rgba.buffer, rgba.byteOffset, w * h * 4), w, h));
+  const r = await bitmapToRGBA(bmp, w, h);
+  bmp.close?.();
+  return r;
+}
+async function decodePdf(buf) {
+  await loadScript(CONFIG.libs.pdf);
+  const pdfjs = window.pdfjsLib;
+  pdfjs.GlobalWorkerOptions.workerSrc = CONFIG.libs.pdfWorker;
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(buf) }).promise;
+  const page = await doc.getPage(1);
+  const vp1 = page.getViewport({ scale: 1 });                      // points
+  const wIn = vp1.width / 72, hIn = vp1.height / 72;
+
+  const ops = await page.getOperatorList();
+  const O = pdfjs.OPS;
+  const imgOps = new Set([O.paintImageXObject, O.paintInlineImageXObject, O.paintImageXObjectRepeat, O.paintInlineImageXObjectGroup].filter(v => v !== undefined));
+  const hasImage = ops.fnArray.some(f => imgOps.has(f));
+
+  async function render(dpi, crop) {                               // crop in inches {x,y,w,h}
+    const scale = dpi / 72;
+    const w = Math.ceil((crop ? crop.w : wIn) * dpi), h = Math.ceil((crop ? crop.h : hIn) * dpi);
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    const ctx = c.getContext("2d", { willReadFrequently: true });
+    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+    const vp = page.getViewport({ scale, offsetX: crop ? -crop.x * dpi : 0, offsetY: crop ? -crop.y * dpi : 0 });
+    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+    return { rgba: ctx.getImageData(0, 0, w, h).data, w, h };
+  }
+  // pass 1: find the artwork on the page
+  const dpi1 = Math.min(300, Math.floor(Math.sqrt(CONFIG.analysisMaxPixels / (wIn * hIn))));
+  const p1 = await render(dpi1);
+  const bb = quickBBox(p1.rgba, p1.w, p1.h);
+  if (!bb) return { ...p1, s: 1, dpi: dpi1, hasImage };
+  const pad = 2 / dpi1;
+  const crop = {
+    x: Math.max(0, bb.x0 / dpi1 - pad), y: Math.max(0, bb.y0 / dpi1 - pad),
+    w: Math.min(wIn, (bb.x1 + 1) / dpi1 + pad) - Math.max(0, bb.x0 / dpi1 - pad),
+    h: Math.min(hIn, (bb.y1 + 1) / dpi1 + pad) - Math.max(0, bb.y0 / dpi1 - pad),
+  };
+  // pass 2: re-render just the artwork, up to 1200 DPI
+  const dpi2 = Math.max(dpi1, Math.min(1200, Math.floor(Math.sqrt(CONFIG.analysisMaxPixels / (crop.w * crop.h)))));
+  const p2 = await render(dpi2, crop);
+  return { ...p2, s: 1, dpi: dpi2, hasImage };
+}
+function quickBBox(rgba, w, h) {
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++) for (let x = 0, p = y * w * 4; x < w; x++, p += 4) {
+    const a = rgba[p + 3], lum = 0.299 * rgba[p] + 0.587 * rgba[p + 1] + 0.114 * rgba[p + 2];
+    if (a * (255 - lum) / 255 > 20) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  }
+  return x1 < 0 ? null : { x0, y0, x1, y1 };
+}
+
+/* ---------- the quality + padding analysis ---------- */
+function analyze(rgba, w, h, includeAll = false) {
+  const n = w * h;
+  let clear = 0, opaque = 0, opaqueLum = 0;
+  for (let i = 0, p = 0; i < n; i++, p += 4) {
+    const a = rgba[p + 3];
+    if (a < 250) clear++;
+    if (a > 128) { opaque++; opaqueLum += 0.299 * rgba[p] + 0.587 * rgba[p + 1] + 0.114 * rgba[p + 2]; }
+  }
+  const hasAlpha = clear > n * 0.02;
+  const lightOnClear = hasAlpha && opaque > 0 && opaqueLum / opaque > 215;
+
+  // "ink" = how hard the laser burns this pixel, 0..255
+  const ink = new Uint8Array(n);
+  for (let i = 0, p = 0; i < n; i++, p += 4) {
+    const a = rgba[p + 3], lum = 0.299 * rgba[p] + 0.587 * rgba[p + 1] + 0.114 * rgba[p + 2];
+    ink[i] = lightOnClear ? a : Math.round(a * (255 - lum) / 255);
+  }
+
+  // background from the border: dark (fills the box) or a light tint we should ignore
+  const samples = [], bs = Math.max(1, Math.floor((2 * w + 2 * h) / 4000));
+  for (let x = 0; x < w; x += bs) samples.push(ink[x], ink[(h - 1) * w + x]);
+  for (let y = 0; y < h; y += bs) samples.push(ink[y * w], ink[y * w + w - 1]);
+  samples.sort((a, b) => a - b);
+  const med = samples[samples.length >> 1];
+  const dev = samples.map(v => Math.abs(v - med)).sort((a, b) => a - b)[samples.length >> 1];
+  const darkBg = med > 150;
+  let lightBg = false;
+  if (!hasAlpha && med >= 10 && med < 100 && dev <= 12) {
+    lightBg = true;
+    const cut = med + 3 * Math.max(dev, 3), k = 255 / (255 - cut);
+    for (let i = 0; i < n; i++) ink[i] = ink[i] <= cut ? 0 : Math.min(255, Math.round((ink[i] - cut) * k));
+  }
+
+  let marked = 0, colored = 0, lightColored = 0;
+  for (let i = 0, p = 0; i < n; i++, p += 4) {
+    if (ink[i] < 40 && !(lightOnClear && rgba[p + 3] > 128)) continue;
+    marked++;
+    const r = rgba[p], g = rgba[p + 1], b = rgba[p + 2];
+    const chroma = Math.max(r, g, b) - Math.min(r, g, b);
+    if (chroma > 48 && rgba[p + 3] > 128) { colored++; if (0.299 * r + 0.587 * g + 0.114 * b > 165) lightColored++; }
+  }
+
+  // ---- find the logo: connected marks on a coarse grid, ignore stray specks and border frames
+  const f = Math.max(1, Math.ceil(Math.sqrt(n / 1.5e6)));
+  const cw = Math.ceil(w / f), ch = Math.ceil(h / f);
+  const mask = new Uint8Array(cw * ch);
+  for (let y = 0; y < h; y++) {
+    const row = y * w, my = ((y / f) | 0) * cw;
+    for (let x = 0; x < w; x++) if (ink[row + x] > 40) mask[my + ((x / f) | 0)] = 1;
+  }
+  const lab = new Int32Array(cw * ch), stack = new Int32Array(cw * ch), comps = [];
+  for (let i = 0; i < mask.length; i++) {
+    if (!mask[i] || lab[i]) continue;
+    const id = comps.length + 1; let sp = 0, area = 0, x0 = cw, y0 = ch, x1 = -1, y1 = -1;
+    stack[sp++] = i; lab[i] = id;
+    while (sp) {
+      const c = stack[--sp], cx = c % cw, cy = (c / cw) | 0; area++;
+      if (cx < x0) x0 = cx; if (cx > x1) x1 = cx; if (cy < y0) y0 = cy; if (cy > y1) y1 = cy;
+      for (let dy = -1; dy <= 1; dy++) {
+        const ny = cy + dy; if (ny < 0 || ny >= ch) continue;
+        for (let dx = -1; dx <= 1; dx++) {
+          const nx = cx + dx; if (nx < 0 || nx >= cw) continue;
+          const j = ny * cw + nx;
+          if (mask[j] && !lab[j]) { lab[j] = id; stack[sp++] = j; }
+        }
+      }
+    }
+    comps.push({ id, area, x0, y0, x1, y1 });
+  }
+  if (!comps.length) return { blank: true, w, h };
+
+  const union = list => list.reduce((u, c) => ({ x0: Math.min(u.x0, c.x0), y0: Math.min(u.y0, c.y0), x1: Math.max(u.x1, c.x1), y1: Math.max(u.y1, c.y1) }), { x0: cw, y0: ch, x1: -1, y1: -1 });
+  const all = union(comps);
+  let keep = comps, dropped = 0, frame = null;
+  if (!includeAll) {
+    // 1) a thin hollow box drawn around everything else = border frame
+    const bySize = [...comps].sort((a, b) => b.area - a.area);
+    for (const c of bySize.slice(0, 5)) {
+      const bw = c.x1 - c.x0 + 1, bh = c.y1 - c.y0 + 1;
+      if (bw < 8 || bh < 8 || c.area > 0.08 * bw * bh) continue;
+      const band = Math.max(2, Math.round(0.04 * Math.min(bw, bh)));
+      let edge = 0;
+      for (let y = c.y0; y <= c.y1; y++) for (let x = c.x0; x <= c.x1; x++)
+        if (lab[y * cw + x] === c.id && (x - c.x0 < band || c.x1 - x < band || y - c.y0 < band || c.y1 - y < band)) edge++;
+      if (edge < 0.85 * c.area) continue;
+      let inA = 0, totA = 0;
+      for (const o of comps) { if (o === c) continue; totA += o.area; if (o.x0 > c.x0 && o.x1 < c.x1 && o.y0 > c.y0 && o.y1 < c.y1) inA += o.area; }
+      if (totA > 0 && inA >= 0.9 * totA) { frame = c; break; }
+    }
+    // 2) group marks that sit close together (letters into words, mark + wordmark)
+    const rest = comps.filter(c => c !== frame).sort((a, b) => b.area - a.area);
+    if (!rest.length) return { blank: true, w, h };
+    const L = rest[0];
+    const gap = Math.max(3, CONFIG.padding.groupGap * Math.max(L.x1 - L.x0 + 1, L.y1 - L.y0 + 1));
+    const cand = rest.slice(0, 3000), parent = cand.map((_, i) => i);
+    const find = i => { while (parent[i] !== i) { parent[i] = parent[parent[i]]; i = parent[i]; } return i; };
+    for (let i = 0; i < cand.length; i++) for (let j = i + 1; j < cand.length; j++) {
+      const a = cand[i], b = cand[j];
+      const dx = Math.max(0, b.x0 - a.x1, a.x0 - b.x1), dy = Math.max(0, b.y0 - a.y1, a.y0 - b.y1);
+      if (Math.max(dx, dy) <= gap) { const ri = find(i), rj = find(j); if (ri !== rj) parent[rj] = ri; }
+    }
+    const groups = new Map();
+    cand.forEach((c, i) => { const r = find(i); if (!groups.has(r)) groups.set(r, []); groups.get(r).push(c); });
+    const list = [...groups.values()].map(g => ({ g, area: g.reduce((s, c) => s + c.area, 0) })).sort((a, b) => b.area - a.area);
+    // 3) keep the main group plus any group that's a real part of the design; drop specks and stray text
+    keep = [];
+    for (const G of list) { if (G === list[0] || G.area >= CONFIG.padding.keepGroupFrac * list[0].area) keep.push(...G.g); else dropped++; }
+    const U = union(keep);                                  // tiny marks beyond the first 3000: keep only if inside
+    for (const c of rest.slice(3000)) { if (c.x0 >= U.x0 && c.x1 <= U.x1 && c.y0 >= U.y0 && c.y1 <= U.y1) keep.push(c); else dropped++; }
+  }
+  const K = union(keep);
+  const rx0 = K.x0 * f, ry0 = K.y0 * f, rx1 = Math.min(w - 1, (K.x1 + 1) * f - 1), ry1 = Math.min(h - 1, (K.y1 + 1) * f - 1);
+
+  // exact edges inside that region
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = ry0; y <= ry1; y++) {
+    const row = y * w; let first = -1, last = -1;
+    for (let x = rx0; x <= rx1; x++) if (ink[row + x] > 20) { first = x; break; }
+    if (first < 0) continue;
+    for (let x = rx1; x >= first; x--) if (ink[row + x] > 20) { last = x; break; }
+    if (first < x0) x0 = first; if (last > x1) x1 = last; if (y < y0) y0 = y; y1 = y;
+  }
+  if (x1 < 0) return { blank: true, w, h };
+  const tw = x1 - x0 + 1, th = y1 - y0 + 1;
+
+  // edge softness + stroke thickness, one pass
+  let E = 0, M = 0, K2 = 0;
+  const hist = new Uint32Array(4097);
+  const colRun = new Uint32Array(tw), colPrev = new Uint8Array(tw);
+  for (let y = y0; y <= y1; y++) {
+    const row = y * w; let run = 0, prev = 0;
+    for (let x = x0; x <= x1; x++) {
+      const v = ink[row + x], on = v >= 128 ? 1 : 0, c = x - x0;
+      if (v >= 26 && v <= 229) {                       // partial tone ON an edge (flat fills/shading don't count)
+        const gx = x < x1 ? Math.abs(ink[row + x + 1] - v) : 0, gy = y < y1 ? Math.abs(ink[row + w + x] - v) : 0;
+        if (gx >= 6 || gy >= 6) M++;
+      }
+      if (on) K2++;
+      if (x > x0 && on !== prev) E++;
+      if (y > y0 && on !== colPrev[c]) E++;
+      if (on) run++; else if (run) { hist[Math.min(run, 4096)]++; run = 0; }
+      if (on) colRun[c]++; else if (colRun[c]) { hist[Math.min(colRun[c], 4096)]++; colRun[c] = 0; }
+      prev = on; colPrev[c] = on;
+    }
+    if (run) hist[Math.min(run, 4096)]++;
+  }
+  for (let c = 0; c < tw; c++) if (colRun[c]) hist[Math.min(colRun[c], 4096)]++;
+
+  return {
+    blank: false, w, h, ink, x0, y0, tw, th,
+    allBox: { x0: all.x0 * f, y0: all.y0 * f, x1: Math.min(w - 1, (all.x1 + 1) * f - 1), y1: Math.min(h - 1, (all.y1 + 1) * f - 1) },
+    hasAlpha, lightOnClear, darkBg, lightBg, dropped, frameRemoved: !!frame, includeAll,
+    padFrac: 1 - (tw * th) / (w * h),
+    colorFrac: marked ? colored / marked : 0,
+    lightColorFrac: marked ? lightColored / marked : 0,
+    softness: E ? M / E : 0,
+    hist,
+  };
+}
+function runPercentile(hist, pct, minRun) {
+  let total = 0; for (let i = minRun; i < hist.length; i++) total += hist[i];
+  if (!total) return null;
+  let acc = 0; const target = total * pct;
+  for (let i = minRun; i < hist.length; i++) { acc += hist[i]; if (acc >= target) return i; }
+  return null;
+}
+async function makeEngravePng(a) {
+  const c = document.createElement("canvas"); c.width = a.tw; c.height = a.th;
+  const ctx = c.getContext("2d");
+  const out = ctx.createImageData(a.tw, a.th), d = out.data;
+  for (let y = 0; y < a.th; y++) {
+    const src = (a.y0 + y) * a.w + a.x0;
+    for (let x = 0, p = y * a.tw * 4; x < a.tw; x++, p += 4) d[p + 3] = a.ink[src + x];   // black, alpha = burn
+  }
+  ctx.putImageData(out, 0, 0);
+  return await new Promise(res => c.toBlob(res, "image/png"));
+}
+async function drawThumb() {
+  const fig = $("#thumbFig");
+  if (!S.dec || !S.a || S.a.blank) { fig.hidden = true; return; }
+  const { rgba, w, h } = S.dec;
+  const maxW = 360, maxH = 200, k = Math.min(maxW / w, maxH / h, 1);
+  const tw = Math.max(1, Math.round(w * k)), th = Math.max(1, Math.round(h * k));
+  const c = $("#thumb"); c.width = tw; c.height = th;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, tw, th);
+  const bmp = await createImageBitmap(new ImageData(new Uint8ClampedArray(rgba.buffer, rgba.byteOffset, w * h * 4), w, h));
+  ctx.imageSmoothingQuality = "high"; ctx.drawImage(bmp, 0, 0, tw, th); bmp.close?.();
+  const a = S.a, x = a.x0 * k, y = a.y0 * k, rw = a.tw * k, rh = a.th * k;
+  ctx.fillStyle = "rgba(106, 52, 22, 0.28)";                  // shade what we left out
+  ctx.fillRect(0, 0, tw, y); ctx.fillRect(0, y + rh, tw, th - y - rh);
+  ctx.fillRect(0, y, x, rh); ctx.fillRect(x + rw, y, tw - x - rw, rh);
+  ctx.setLineDash([5, 3]); ctx.lineWidth = 1.5; ctx.strokeStyle = "#6a3416";
+  ctx.strokeRect(x + 0.75, y + 0.75, Math.max(1, rw - 1.5), Math.max(1, rh - 1.5));
+  const pct = Math.round(a.padFrac * 100);
+  $("#thumbCap").textContent = pct >= 1
+    ? `The dashed box shows the logo we’ll size and engrave. The shaded area (${pct}% of your file) is blank space or marks we left out.`
+    : "Your file is already cropped tight to the logo.";
+  fig.hidden = false;
+  $("#keepMarksRow").hidden = !(a.dropped || a.frameRemoved || a.includeAll);
+}
+
+/* ---------- size ---------- */
+const origTrimW = () => S.a.tw / S.scale;                // trimmed width in original-file pixels
+const effDpi = (w = S.widthIn) => origTrimW() / w;
+const heightIn = (w = S.widthIn) => w * S.aspect;
+const meets = (dpi, target) => dpi >= target * 0.995;      // PNG stores pixels/meter, so 1200 DPI reads as 1199.998
+const hasLogo = () => S.a && !S.a.blank && S.engraveUrl;
+
+const maxFitHeightIn = () => CONFIG.drawerHeightIn - CONFIG.diagram.fromTopIn - CONFIG.grooveFromBottomIn - CONFIG.grooveIn - 1 / 16;
+function sliderBounds() {
+  const step = CONFIG.sizeStepIn;
+  const maxRaw = Math.min(CONFIG.maxWidthIn, Math.min(CONFIG.maxHeightIn, maxFitHeightIn()) / S.aspect);
+  const max = Math.max(step, Math.floor(maxRaw / step + 1e-9) * step);
+  const min = Math.min(CONFIG.minWidthIn, max);
+  return { min, max, step };
+}
+const snap = (x, b = sliderBounds()) => Math.min(b.max, Math.max(b.min, Math.floor(x / b.step + 1e-6) * b.step));
+
+function defaultSize() {
+  const b = sliderBounds();
+  if (S.pdf) return { w: snap(S.a.tw / S.pdf.renderDpi, b), src: "the PDF’s own size" };
+  const fd = S.fileDpi;
+  if (fd && fd.x >= 150) {
+    const w = origTrimW() / fd.x;
+    if (w >= 0.25 && w <= CONFIG.maxWidthIn * 1.5) return { w: snap(w, b), src: `the size saved in the file (${fmtInt(fd.x)} DPI)` };
+  }
+  let w = CONFIG.defaultWidthIn;
+  if (w * S.aspect > CONFIG.defaultMaxHeightIn) w = CONFIG.defaultMaxHeightIn / S.aspect;
+  if (origTrimW() / w < CONFIG.idealDpi) {                 // don't start somewhere the file can't support if avoidable
+    const at1200 = origTrimW() / CONFIG.idealDpi, at600 = origTrimW() / CONFIG.minDpi;
+    if (at1200 >= 1) w = Math.min(w, at1200); else if (at600 >= 1) w = Math.min(w, at600);
+  }
+  return { w: snap(w, b), src: "a starting size — slide to change it" };
+}
+
+/* ---------- checks ---------- */
+function buildChecks() {
+  const C = [];
+  const add = (status, title, detail) => C.push({ status, title, detail });
+  const k = S.kind;
+  if (!ACCEPTED.has(k)) add("fail", `${KIND_LABEL[k]} isn’t an accepted format`, "Send TIF, PNG, JPG, PDF or EPS. Export from your design program rather than renaming the file.");
+  else if (k === "eps" || k === "ai") add("note", `${KIND_LABEL[k]} received`, "Browsers can’t preview this format, so there’s no proof to sign here. Email it to info@keystonewood.com and Keystone will send you a proof.");
+  else add("pass", `${KIND_LABEL[k]} is an accepted format`, "");
+
+  if (!S.a) { S.checks = C; return; }
+  if (S.a.blank) { add("fail", "No artwork found", "The file looks empty or entirely white. Check that you exported the right artboard or layer."); S.checks = C; return; }
+
+  const a = S.a, wIn = S.widthIn, hIn = heightIn();
+  if (a.padFrac >= CONFIG.padding.excessiveFrac)
+    add("info", `Trimmed ${Math.round(a.padFrac * 100)}% empty space`, `The file has a lot of space around the logo. Sizes here are for the logo itself (${fmtInt(a.tw / S.scale)} × ${fmtInt(a.th / S.scale)} px), not the whole file.`);
+  if (a.dropped) add("info", `Left out ${a.dropped} stray mark${a.dropped > 1 ? "s" : ""}`, "Small marks well away from the logo (specks, dust or stray text) aren’t counted in the size. If they’re part of your logo, tick “Include everything in my file.”");
+  if (a.frameRemoved) add("info", "Left out a border line", "A thin box drawn around the artwork isn’t counted in the size. If it should be engraved, tick “Include everything in my file.”");
+  if (a.lightBg) add("note", "Ignored a light background", "The file has a tinted background. The laser would burn it faintly, so we’ve treated it as blank. Keystone will do the same unless you say otherwise.");
+
+  if (S.pdf && !S.pdf.hasImage) {
+    add("pass", "Vector artwork", "Lines stay sharp at any size.");
+  } else if (S.pdf && S.pdf.hasImage) {
+    add("note", "PDF contains a placed image", "Keystone will confirm the embedded image is at least 600 DPI at this size. For best results send the original vector file or a 1200 DPI TIF.");
+  } else {
+    const dpi = effDpi();
+    if (meets(dpi, CONFIG.idealDpi)) add("pass", `${fmtInt(dpi)} DPI at ${frac(wIn)} wide`, "Meets Keystone’s 1200 DPI recommendation.");
+    else if (meets(dpi, CONFIG.minDpi)) add("note", `${fmtInt(dpi)} DPI at ${frac(wIn)} wide`, `Above the 600 DPI minimum. 1200 DPI engraves crisper: ${fmtInt(CONFIG.idealDpi * wIn)} pixels wide at this size, or slide down to ${frac(snap(origTrimW() / CONFIG.idealDpi))}.`);
+    else {
+      add("fail", `${fmtInt(dpi)} DPI at ${frac(wIn)} wide`, `Below the 600 DPI minimum, so it may engrave blurry or jagged. Slide down to ${frac(Math.floor(origTrimW() / CONFIG.minDpi * 16) / 16)} or smaller, or send a larger original (${fmtInt(CONFIG.minDpi * wIn)}+ pixels wide for this size). You can still send it.`);
+      C[C.length - 1].canSend = true;                       // low resolution warns but doesn't block
+    }
+
+    const soft = a.softness / S.scale;
+    if (soft > CONFIG.enlargedEdgePx) {
+      add("note", "Edges are blurry or shaded", `It looks like an image that was enlarged from a smaller file, or it has soft shading. Real detail is closer to ${fmtInt(dpi * 1.5 / soft)} DPI. Website images usually can’t be used — please send the original artwork.`);
+    } else if (soft > CONFIG.softEdgePx) {
+      add("note", "Edges are slightly soft", "The file may have been enlarged or blurred. It should still work, but an original file will engrave crisper.");
+    } else add("pass", "Edges are crisp", "");
+    if (S.fileDpi && S.fileDpi.x <= 96) add("note", `File is saved at ${fmtInt(S.fileDpi.x)} DPI`, "That’s typical of images copied from a website. If this is a web image, please send the original instead.");
+  }
+
+  if (a.darkBg) add("note", "Artwork has a dark background", "The laser would burn the whole background. Send the logo on white or transparent unless you want a filled block.");
+  if (a.lightOnClear) add("note", "Light logo on a transparent background", "We’ve shown the shape as the engraved area. Confirm with Keystone if that’s not what you want.");
+  if (a.colorFrac > 0.08) {
+    if (a.lightColorFrac > 0.15) add("note", "Light colors may disappear", "Engraving is one tone. Light colors burn faintly or not at all. Black artwork engraves best.");
+    else add("note", "Color artwork", "Engraving is one tone, so colors become darker or lighter burns. Black artwork engraves best.");
+  }
+  const pxPerIn = a.tw / wIn;
+  const p10 = runPercentile(a.hist, 0.10, pxPerIn >= 600 ? 2 : 1);
+  if (p10) {
+    const thin = p10 / pxPerIn;
+    if (thin < CONFIG.thinFeatureIn) add("note", "Very fine details", `Some lines are about ${(thin * 1000).toFixed(0)} thousandths of an inch thick at this size and may fill in. Consider going larger or simplifying small text.`);
+    else add("pass", "Line weight looks engravable", "");
+  }
+  S.checks = C;
+}
+
+function renderChecks() {
+  const list = $("#checks"); list.innerHTML = "";
+  const icon = { pass: "✓", note: "!", fail: "✕", info: "i" };
+  const sr = { pass: "Passed:", note: "Note:", fail: "Problem:", info: "Info:" };
+  for (const c of S.checks) {
+    const li = document.createElement("li"); li.className = c.status;
+    li.innerHTML = `<span class="ico" aria-hidden="true">${icon[c.status]}</span><div><span class="visually-hidden">${sr[c.status]}</span><b>${esc(c.title)}</b>${c.detail ? `<small>${esc(c.detail)}</small>` : ""}</div>`;
+    list.appendChild(li);
+  }
+  const fails = S.checks.filter(c => c.status === "fail").length, notes = S.checks.filter(c => c.status === "note").length;
+  S.verdict = !S.file ? "idle" : fails ? "fail" : notes ? "note" : "pass";
+  S.blocked = S.checks.some(c => c.status === "fail" && !c.canSend);
+  S.lowRes = S.checks.some(c => c.status === "fail" && c.canSend);
+  const copy = {
+    idle: ["Waiting for a file", "Checks run in your browser as soon as you add one."],
+    pass: ["Ready to engrave", "This file meets Keystone’s artwork specs at this size."],
+    note: ["Usable — read the notes", "You can send it. Keystone will review the items below."],
+    fail: S.blocked ? ["Not usable yet", "Fix the item marked ✕ before sending."]
+                    : ["Below Keystone’s minimum", "You can still send it. Keystone will review it and may ask for a better file or a smaller size."],
+  }[S.verdict];
+  const v = $("#verdict"); v.className = `verdict ${S.verdict}`;
+  v.innerHTML = `<b>${copy[0]}</b><span>${copy[1]}</span>`;
+
+  const showDpi = hasLogo() && !S.pdf;
+  $("#dpiReadout").hidden = !(showDpi || (S.pdf && hasLogo()));
+  if (showDpi) { $("#dpiOut").textContent = fmtInt(effDpi()); $("#dpiUnit").textContent = "DPI at this size"; }
+  else if (S.pdf) { $("#dpiOut").textContent = S.pdf.hasImage ? "PDF" : "Vector"; $("#dpiUnit").textContent = S.pdf.hasImage ? "with a placed image" : "sharp at any size"; }
+  const canSign = hasLogo() && !S.blocked;
+  $("#sendBtn").disabled = !canSign;
+  $("#sendBtn").textContent = sendLabel();
+  const warn = $("#sendWarn"), low = canSign && S.lowRes;
+  warn.hidden = !low;
+  if (low) warn.innerHTML = `<b>Below the 600 DPI minimum (${fmtInt(effDpi())} DPI at ${frac(S.widthIn)} wide).</b> It may engrave blurry or jagged. You can still send it, and Keystone will contact you if they need a better file or a smaller size.`;
+}
+
+/* ---------- laser burn simulation ----------
+   Same tone pipeline as Keystone's Bubble preview (black/white points, gamma, darkness,
+   white floor, dark clip, optional 4x4 dither), softened by the beam spot, then laid on
+   procedural maple like a multiply blend. Tune with ?tune in the URL. */
+let BURN = { ...CONFIG.burn };
+const hash2 = (i, j) => {
+  let h = (Math.imul(i | 0, 374761393) + Math.imul(j | 0, 668265263)) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+};
+const sstep = t => t * t * (3 - 2 * t);
+function noise2(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y), fx = sstep(x - xi), fy = sstep(y - yi);
+  const a = hash2(xi, yi), b = hash2(xi + 1, yi), c = hash2(xi, yi + 1), d = hash2(xi + 1, yi + 1);
+  return a + (b - a) * fx + (c - a) * fy + (a - b - c + d) * fx * fy;
+}
+const noise1 = x => noise2(x, 17.31);
+
+/* wood in "drawer inches": x from the front edge (negative toward the back), y down from the top edge */
+function makeWood(wPx, hPx, pxIn, x0In, y0In, sp, front, top, D, clip) {
+  const data = new Uint8ClampedArray(wPx * hPx * 4), grain = new Uint8Array(wPx * hPx);
+  const warp = new Float32Array(wPx);
+  for (let x = 0; x < wPx; x++) {
+    const xr = x0In + (x + 0.5) / pxIn - front;
+    warp[x] = (noise1(xr * 0.32 + 3.1) - 0.5) * 0.55 + (noise1(xr * 2.3 + 9.7) - 0.5) * 0.05;
+  }
+  const [br, bg, bb] = sp.base, [lr, lg, lb] = sp.late;
+  for (let y = 0; y < hPx; y++) {
+    const yr = y0In + (y + 0.5) / pxIn - top;
+    if (yr < -0.02 || yr > D + 0.02) continue;
+    for (let x = 0; x < wPx; x++) {
+      const xr = x0In + (x + 0.5) / pxIn - front;
+      if (xr > 0.01) continue;
+      const yy = yr + warp[x];
+      const ring = yy * sp.ringFreq + 0.6 * noise2(xr * 0.12, yy * 0.8);
+      const f = ring - Math.floor(ring);
+      const late = f < 0.55 ? 0 : f < 0.9 ? sstep((f - 0.55) / 0.35) : 1 - sstep((f - 0.9) / 0.1);
+      const fiber = noise2(xr * 2.2, yr * 85) * 0.7 + noise2(xr * 6, yr * 240) * 0.3;
+      let g = late * sp.ringAmt + fiber * sp.fiberAmt;
+      g = g < 0 ? 0 : g > 1 ? 1 : g;
+      const i = y * wPx + x, p = i * 4, n = (hash2(x * 7 + 3, y * 13 + 1) - 0.5) * 4;
+      data[p] = br + (lr - br) * g + n; data[p + 1] = bg + (lg - bg) * g + n; data[p + 2] = bb + (lb - bb) * g + n; data[p + 3] = 255;
+      grain[i] = g * 255;
+    }
+  }
+  if (clip) {                                                // trim to the side's outline (break line etc.)
+    const c = document.createElement("canvas"); c.width = wPx; c.height = hPx;
+    const g = c.getContext("2d"); g.putImageData(new ImageData(data, wPx, hPx), 0, 0);
+    g.globalCompositeOperation = "destination-in";
+    g.setTransform(pxIn, 0, 0, pxIn, -x0In * pxIn, -y0In * pxIn);
+    g.fill(new Path2D(clip));
+    const clipped = g.getImageData(0, 0, wPx, hPx).data;
+    return { data: clipped, grain, w: wPx, h: hPx };
+  }
+  return { data, grain, w: wPx, h: hPx };
+}
+const woodCache = new Map();
+function getWood(key, ...args) {
+  if (woodCache.has(key)) return woodCache.get(key);
+  const w = makeWood(...args);
+  woodCache.set(key, w);
+  if (woodCache.size > 4) woodCache.delete(woodCache.keys().next().value);
+  return w;
+}
+
+/* tone curve (+ optional ordered dither at the laser's line spacing) -> alpha mask canvas */
+let toneCache = { key: null };
+const BAYER4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+function toneFor(wIn, hIn) {
+  const key = [S.engraveUrl, JSON.stringify(BURN), BURN.dither ? wIn.toFixed(3) : ""].join("|");
+  if (toneCache.key === key) return toneCache;
+  const a = S.a, c = document.createElement("canvas"); c.width = a.tw; c.height = a.th;
+  const g = c.getContext("2d"), out = g.createImageData(a.tw, a.th), d = out.data;
+  // lookup: luminance (0-255, logo flattened on white) -> burn amount (alpha 0-255)
+  const B = BURN, lut = new Uint8ClampedArray(256);
+  const floorN = Math.min(254, Math.max(0, B.whiteFloor)) / 255;
+  const invRange = 1 / Math.max(1, B.white - B.black);
+  for (let lum = 0; lum < 256; lum++) {
+    let y = (lum - B.black) * invRange;
+    y = y < 0 ? 0 : y > 1 ? 1 : y;
+    y = Math.pow(y, Math.max(0.1, B.gamma));
+    y = (1 - B.darkness) * y;
+    y = floorN + y * (1 - floorN);
+    if (y <= B.darkClip) y = 0;
+    lut[lum] = B.skipWhite && lum >= B.white ? 0 : Math.round((1 - y) * 255);
+  }
+  for (let y = 0; y < a.th; y++) {
+    const src = (a.y0 + y) * a.w + a.x0;
+    for (let x = 0, p = y * a.tw * 4; x < a.tw; x++, p += 4) d[p + 3] = lut[255 - a.ink[src + x]];
+  }
+  g.putImageData(out, 0, 0);
+  let canvas = c, nearest = false;
+  if (B.dither) {                                            // Bayer 4x4 like the Bubble preview, at the laser's dot spacing
+    const dw = Math.max(1, Math.round(wIn * B.ditherDpi)), dh = Math.max(1, Math.round(hIn * B.ditherDpi));
+    const c2 = document.createElement("canvas"); c2.width = dw; c2.height = dh;
+    const g2 = c2.getContext("2d"); g2.imageSmoothingQuality = "high"; g2.drawImage(c, 0, 0, dw, dh);
+    const im = g2.getImageData(0, 0, dw, dh), dd = im.data;
+    for (let y = 0; y < dh; y++) for (let x = 0; x < dw; x++) {
+      const p = (y * dw + x) * 4, t = (BAYER4[(y & 3) * 4 + (x & 3)] + 0.5) / 16;
+      dd[p + 3] = 1 - dd[p + 3] / 255 >= t ? 0 : 255;
+    }
+    g2.putImageData(im, 0, 0); canvas = c2; nearest = true;
+  }
+  toneCache = { key, canvas, nearest };
+  return toneCache;
+}
+const FILTER_OK = (() => { try { const g = document.createElement("canvas").getContext("2d"); g.filter = "blur(1px)"; return g.filter === "blur(1px)"; } catch { return false; } })();
+const scratch = document.createElement("canvas");
+function blurredMask(src, nearest, dx, dy, dw, dh, rw, rh, radius) {
+  scratch.width = rw; scratch.height = rh;
+  const g = scratch.getContext("2d", { willReadFrequently: true });
+  g.clearRect(0, 0, rw, rh); g.imageSmoothingEnabled = !nearest; g.imageSmoothingQuality = "high";
+  if (radius >= 0.3 && FILTER_OK) { g.filter = `blur(${radius.toFixed(2)}px)`; g.drawImage(src, dx, dy, dw, dh); g.filter = "none"; }
+  else if (radius >= 1.5) {                                  // no canvas filter (older Safari): down/up-sample blur
+    const k = Math.min(8, radius), s = document.createElement("canvas");
+    s.width = Math.max(1, Math.round(rw / k)); s.height = Math.max(1, Math.round(rh / k));
+    const sg = s.getContext("2d"); sg.imageSmoothingQuality = "high"; sg.drawImage(src, dx / k, dy / k, dw / k, dh / k);
+    g.imageSmoothingEnabled = true; g.drawImage(s, 0, 0, rw, rh);
+  } else g.drawImage(src, dx, dy, dw, dh);
+  return g.getImageData(0, 0, rw, rh).data;
+}
+function burnInto(ctx, wood, pxIn, x0In, y0In, lxIn, lyIn, wIn, hIn, sp) {
+  const spot = BURN.spotIn * pxIn, m = Math.ceil(spot * 2 + 2);
+  const lx = (lxIn - x0In) * pxIn, ly = (lyIn - y0In) * pxIn, lw = wIn * pxIn, lh = hIn * pxIn;
+  const rx0 = Math.max(0, Math.floor(lx) - m), ry0 = Math.max(0, Math.floor(ly) - m);
+  const rx1 = Math.min(wood.w, Math.ceil(lx + lw) + m), ry1 = Math.min(wood.h, Math.ceil(ly + lh) + m);
+  const rw = rx1 - rx0, rh = ry1 - ry0;
+  if (rw <= 0 || rh <= 0) return;
+  const tone = toneFor(wIn, hIn);
+  const M = blurredMask(tone.canvas, tone.nearest, lx - rx0, ly - ry0, lw, lh, rw, rh, spot);
+  const out = ctx.createImageData(rw, rh), o = out.data, W = wood.data;
+  const [Dr, Dg, Db] = sp.burnDeep;
+  for (let y = 0; y < rh; y++) {
+    for (let x = 0; x < rw; x++) {
+      const wi = (ry0 + y) * wood.w + rx0 + x, wp = wi * 4, p = (y * rw + x) * 4;
+      const k = M[p + 3] / 255;                              // 0 = untouched wood, 1 = solid burn
+      // like the Bubble preview's multiply blend: wood x (1 - k), with solid burns landing on maple char
+      o[p] = W[wp] + (Dr - W[wp]) * k;
+      o[p + 1] = W[wp + 1] + (Dg - W[wp + 1]) * k;
+      o[p + 2] = W[wp + 2] + (Db - W[wp + 2]) * k;
+      o[p + 3] = W[wp + 3];
+    }
+  }
+  ctx.putImageData(out, rx0, ry0);
+}
+
+/* ---------- drawer side preview ---------- */
+function stageGeometry() {
+  const D = S.boxH, L = CONFIG.drawerPreviewLenIn;
+  const left = 0.45, top = 1.0, right = 1.25, bottom = 0.35;
+  const W = left + L + right, H = top + D + bottom, front = left + L, xs = left + 0.1;
+  const zig = `L${xs} ${top + D * 0.6} L${xs + 0.14} ${top + D * 0.53} L${xs - 0.12} ${top + D * 0.47} L${xs} ${top + D * 0.4}`;
+  const sidePath = `M${xs} ${top} H${front} V${top + D} H${xs} ${zig} Z`;
+  return { D, L, left, top, W, H, front, xs, sidePath, gy: top + D - CONFIG.grooveFromBottomIn - CONFIG.grooveIn };
+}
+function trueInPx() { return 96 * (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--cal")) || 1); }
+function sizeCanvas(cv, cssW, cssH) {
+  let dpr = Math.min(2, window.devicePixelRatio || 1);
+  if (cssW * cssH * dpr * dpr > 4.5e6) dpr = Math.max(1, Math.sqrt(4.5e6 / (cssW * cssH)));
+  cv.width = Math.round(cssW * dpr); cv.height = Math.round(cssH * dpr);
+  cv.style.width = `${cssW}px`; cv.style.height = `${cssH}px`;
+  return cv.width / cssW;
+}
+let paintQueued = false;
+function renderDrawer() {
+  if (paintQueued) return;
+  paintQueued = true;
+  requestAnimationFrame(() => { paintQueued = false; S.view === "close" && hasLogo() ? paintCloseup() : paintSide(); });
+}
+function paintSide() {
+  const view = $("#drawerView"), G = stageGeometry(), { D, L, top, W, H, front, xs, gy } = G;
+  const tIn = trueInPx(), fit = Math.min(1, Math.max(240, view.clientWidth) / (W * tIn)), pxIn = tIn * fit;
+  $("#scaleNote").textContent = fit > 0.995 ? "Shown at actual size" : `Shown at ${Math.round(fit * 100)}% of actual size`;
+  const cssW = Math.round(W * pxIn), cssH = Math.round(H * pxIn);
+  const sp = CONFIG.woods[S.wood], fs = Math.max(0.12, 11 / pxIn);
+  const tick = (x, y1, y2) => `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"/>`;
+
+  let ruler = "";
+  for (let i = 0; i <= L * 8; i++) {
+    const x = front - i / 8, len = i % 8 === 0 ? 0.16 : i % 4 === 0 ? 0.11 : 0.06;
+    ruler += tick(x.toFixed(4), top - 0.08, top - 0.08 - len);
+    if (i % 8 === 0 && i > 0) ruler += `<text x="${x}" y="${top - 0.3}" text-anchor="middle">${i / 8}</text>`;
+  }
+  const DT = CONFIG.dovetail, tl = DT.lengthIn, half = DT.tipIn / 2;
+  const centers = [];
+  if (DT.anchor === "groove") {
+    const gc = gy - top + CONFIG.grooveIn / 2;               // groove center, from the top edge
+    for (let c = gc - DT.pitchIn / 2; c - half >= -1e-6; c -= DT.pitchIn) centers.unshift(c);
+    for (let c = gc + DT.pitchIn / 2; c + half <= D + 1e-6; c += DT.pitchIn) centers.push(c);
+  } else {
+    for (let c = DT.firstCenterIn; c + half <= D + 1e-6; c += DT.pitchIn) centers.push(c);
+  }
+  let tails = "", grooveX2 = front;
+  for (const yc of centers) {
+    const y = top + yc, r = DT.rootIn / 2, t = half;
+    tails += `<path d="M${front} ${y - r} L${front + tl} ${y - t} L${front + tl} ${y + t} L${front} ${y + r}"/>`;
+    if (y - t < gy + CONFIG.grooveIn && y + t > gy) grooveX2 = front + tl;   // only happens with anchor "top"
+  }
+  let dims = "", woodDims = "", warn = "", placeholder = "";
+  if (hasLogo()) {
+    const w = S.widthIn, h = heightIn();
+    const lx = front - CONFIG.diagram.fromFrontIn - w, ly = top + CONFIG.diagram.fromTopIn, dy = top - 0.62;
+    dims = `${tick(front - CONFIG.diagram.fromFrontIn, dy - 0.1, top - 0.02)}${tick(front, dy - 0.1, top - 0.02)}
+      <line x1="${front - CONFIG.diagram.fromFrontIn}" y1="${dy}" x2="${front}" y2="${dy}"/>
+      <text x="${front - CONFIG.diagram.fromFrontIn / 2}" y="${dy - 0.07}" text-anchor="middle">3"</text>
+      <line x1="${front + 0.44}" y1="${top}" x2="${front + 0.82}" y2="${top}"/><line x1="${front + 0.44}" y1="${ly}" x2="${front + 0.82}" y2="${ly}"/>
+      <line x1="${front + 0.7}" y1="${top}" x2="${front + 0.7}" y2="${ly}"/>
+      <text x="${front + 0.76}" y="${(top + ly) / 2 + fs * 0.35}">1/2"</text>`;
+    if (S.showDims && ly + h + 0.42 < gy) {
+      const by = ly + h + 0.16;
+      woodDims = `${tick(lx, by - 0.07, by + 0.07)}${tick(lx + w, by - 0.07, by + 0.07)}<line x1="${lx}" y1="${by}" x2="${lx + w}" y2="${by}"/>
+        <text x="${lx + w / 2}" y="${by + fs + 0.02}" text-anchor="middle">${frac(w)} × ${frac(h)}</text>`;
+    }
+    if (ly + h > gy - 1 / 16) warn = `<rect x="${lx - 0.05}" y="${ly - 0.05}" width="${w + 0.1}" height="${h + 0.1}" fill="none" stroke="#b3261e" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="${xs + 0.25}" y="${top + 0.35}" fill="#b3261e" font-weight="700">Too tall for a ${D}" side</text>`;
+  } else {
+    placeholder = `<text x="${front - 3 - 1.25}" y="${top + Math.min(1, D / 2)}" text-anchor="middle" fill="#6b4a2b">Your logo goes here</text>`;
+  }
+  const ink = sp.dark ? "#f3e2c4" : "#3b2a1a";
+
+  view.innerHTML = `<div class="drawer-stack" style="width:${cssW}px;height:${cssH}px">
+    <canvas aria-hidden="true"></canvas>
+    <svg viewBox="0 0 ${W} ${H}" width="${cssW}" height="${cssH}" role="img"
+      aria-label="Inside of a ${D} inch ${sp.name.toLowerCase()} drawer side. ${hasLogo() ? `Logo burned in at ${frac(S.widthIn)} wide by ${frac(heightIn())} tall, 3 inches from the front and 1/2 inch down.` : "No logo yet."}"
+      font-family="Archivo, system-ui, sans-serif" font-size="${fs}">
+      <path d="${G.sidePath}" fill="none" stroke="#3b2a1a" stroke-width="1.25"/>
+      <g fill="${sp.endGrain}" stroke="#3b2a1a" stroke-width="1">${tails}</g>
+      <rect x="${xs}" y="${gy}" width="${grooveX2 - xs}" height="${CONFIG.grooveIn}" fill="rgba(60,35,10,.22)"/>
+      <g stroke="#3b2a1a" stroke-width="1"><line x1="${xs}" y1="${gy}" x2="${grooveX2}" y2="${gy}"/><line x1="${xs}" y1="${gy + CONFIG.grooveIn}" x2="${grooveX2}" y2="${gy + CONFIG.grooveIn}"/></g>
+      <g stroke="currentColor" fill="currentColor" stroke-width="1"><line x1="${front - L + 0.1}" y1="${top - 0.08}" x2="${front}" y2="${top - 0.08}"/>${ruler}${dims}</g>
+      <text x="${front - L + 0.1}" y="${top - 0.3 - fs * 1.1}" fill="currentColor" font-size="${fs * 0.85}">ruler: inches from the front of the drawer</text>
+      <g stroke="${ink}" fill="${ink}" stroke-width="1">${woodDims}</g>
+      ${placeholder}${warn}
+      <text x="${xs + 0.2}" y="${top + D - 0.12}" fill="${ink}" font-size="${fs * 0.85}" opacity=".75">bottom groove</text>
+      <text x="${front + 0.25}" y="${top + D + 0.25}" text-anchor="middle" fill="currentColor" font-size="${fs * 0.85}">front</text>
+    </svg></div>`;
+
+  const cv = view.querySelector("canvas"), k = sizeCanvas(cv, cssW, cssH), cPxIn = pxIn * k;
+  const wood = getWood(`side|${S.wood}|${cv.width}x${cv.height}|${D}`, cv.width, cv.height, cPxIn, 0, 0, sp, front, top, D, G.sidePath);
+  const ctx = cv.getContext("2d");
+  ctx.putImageData(new ImageData(wood.data, wood.w, wood.h), 0, 0);
+  if (hasLogo()) burnInto(ctx, wood, cPxIn, 0, 0, front - CONFIG.diagram.fromFrontIn - S.widthIn, top + CONFIG.diagram.fromTopIn, S.widthIn, heightIn(), sp);
+}
+function paintCloseup() {
+  const view = $("#drawerView"), G = stageGeometry(), { D, top, front } = G, sp = CONFIG.woods[S.wood];
+  const w = S.widthIn, h = heightIn(), lx = front - CONFIG.diagram.fromFrontIn - w, ly = top + CONFIG.diagram.fromTopIn;
+  const pad = Math.min(0.4, Math.max(0.15, Math.max(w, h) * 0.12));
+  const x0 = lx - pad, x1 = Math.min(front + 0.12, lx + w + pad), y0 = Math.max(top - 0.12, ly - pad), y1 = Math.min(top + D, ly + h + pad);
+  const vw = x1 - x0, vh = y1 - y0, tIn = trueInPx();
+  const avail = Math.max(240, view.clientWidth);
+  const pxIn = Math.min(CONFIG.closeupMaxZoom * tIn, avail / vw, 560 / vh);
+  const zoom = pxIn / tIn;
+  $("#scaleNote").textContent = `Close-up at ${zoom.toFixed(1)}× actual size`;
+  const cssW = Math.round(vw * pxIn), cssH = Math.round(vh * pxIn), fs = 11 / pxIn;
+  const bar = vw > 2.5 ? 1 : vw > 1.2 ? 0.5 : 0.25, bx = x0 + 0.12, by = y1 - 0.1;
+  const ink = sp.dark ? "#f3e2c4" : "#3b2a1a";
+  view.innerHTML = `<div class="drawer-stack" style="width:${cssW}px;height:${cssH}px">
+    <canvas aria-hidden="true"></canvas>
+    <svg viewBox="${x0} ${y0} ${vw} ${vh}" width="${cssW}" height="${cssH}" role="img" font-family="Archivo, system-ui, sans-serif" font-size="${fs}"
+      aria-label="Close-up of the logo burned into ${sp.name.toLowerCase()}, ${zoom.toFixed(1)} times actual size.">
+      ${y0 < top ? `<line x1="${x0}" y1="${top}" x2="${Math.min(x1, front)}" y2="${top}" stroke="#3b2a1a" stroke-width="1.25"/>` : ""}
+      ${x1 > front ? `<line x1="${front}" y1="${Math.max(y0, top)}" x2="${front}" y2="${y1}" stroke="#3b2a1a" stroke-width="1.25"/>` : ""}
+      <g stroke="${ink}" fill="${ink}" stroke-width="1.5">
+        <line x1="${bx}" y1="${by}" x2="${bx + bar}" y2="${by}"/><line x1="${bx}" y1="${by - 0.03}" x2="${bx}" y2="${by + 0.03}"/><line x1="${bx + bar}" y1="${by - 0.03}" x2="${bx + bar}" y2="${by + 0.03}"/>
+        <text x="${bx + bar + 0.04}" y="${by + fs * 0.35}" stroke="none">${frac(bar)}</text>
+      </g>
+    </svg></div>`;
+  const cv = view.querySelector("canvas"), k = sizeCanvas(cv, cssW, cssH), cPxIn = pxIn * k;
+  const wood = getWood(`close|${S.wood}|${cv.width}x${cv.height}|${D}|${x0.toFixed(3)},${y0.toFixed(3)}`, cv.width, cv.height, cPxIn, x0, y0, sp, front, top, D, null);
+  const ctx = cv.getContext("2d");
+  ctx.putImageData(new ImageData(wood.data, wood.w, wood.h), 0, 0);
+  burnInto(ctx, wood, cPxIn, x0, y0, lx, ly, w, h, sp);
+}
+new ResizeObserver(() => renderDrawer()).observe($("#drawerView"));
+document.querySelectorAll('input[name="pview"]').forEach(r => r.addEventListener("change", () => { if (r.checked) { S.view = r.value; S.viewPicked = true; renderDrawer(); } }));
+function phoneDefaultView() {
+  if (S.viewPicked || !hasLogo() || window.innerWidth > 700) return;
+  S.view = "close"; const r = document.querySelector('input[name="pview"][value="close"]'); if (r) r.checked = true;
+}
+
+/* ---------- burn tuning panel (open the page with ?tune) ---------- */
+function setupTune() {
+  if (!new URLSearchParams(location.search).has("tune")) return;
+  const box = $("#tune"); box.hidden = false;
+  const fields = [
+    ["gamma", "Gamma (bbGamma)", 0.3, 3, 0.05],
+    ["black", "Black point, 0-255 (bbBlack)", 0, 254, 1],
+    ["white", "White point, 0-255 (bbWhite)", 1, 255, 1],
+    ["whiteFloor", "White floor, 0-254 (bbWhiteFloor)", 0, 254, 1],
+    ["darkClip", "Dark clip: at or below this burns solid (bbDarkClip)", 0, 1, 0.01],
+    ["darkness", "Darkness (bbDarkness)", 0, 1, 0.01],
+    ["spotIn", "Beam spot / edge softness (in)", 0, 0.015, 0.0005],
+    ["ditherDpi", "Dither dots per inch", 100, 600, 10],
+  ];
+  const grid = $("#tuneGrid"); grid.innerHTML = "";
+  for (const [k, label, min, max, step] of fields) {
+    const row = document.createElement("label"); row.className = "tune-row";
+    row.innerHTML = `<span>${label}</span><input type="range" min="${min}" max="${max}" step="${step}" value="${BURN[k]}"><output>${BURN[k]}</output>`;
+    const inp = row.querySelector("input"), out = row.querySelector("output");
+    inp.addEventListener("input", () => { BURN[k] = parseFloat(inp.value); out.textContent = inp.value; renderDrawer(); });
+    grid.appendChild(row);
+  }
+  const dith = document.createElement("label"); dith.className = "choice";
+  dith.innerHTML = `<input type="checkbox" ${BURN.dither ? "checked" : ""}> Dither (bbDither)`;
+  dith.querySelector("input").addEventListener("change", e => { BURN.dither = e.target.checked; renderDrawer(); });
+  grid.appendChild(dith);
+  const skip = document.createElement("label"); skip.className = "choice";
+  skip.innerHTML = `<input type="checkbox" ${BURN.skipWhite ? "checked" : ""}> Don’t tint the white background`;
+  skip.querySelector("input").addEventListener("change", e => { BURN.skipWhite = e.target.checked; renderDrawer(); });
+  grid.appendChild(skip);
+  $("#tuneCopy").onclick = async () => {
+    const txt = "burn: " + JSON.stringify(BURN, null, 2).replace(/"(\w+)":/g, "$1:") + ",";
+    try { await navigator.clipboard.writeText(txt); $("#tuneCopy").textContent = "Copied"; } catch { prompt("Copy these settings:", txt); }
+    setTimeout(() => { $("#tuneCopy").textContent = "Copy settings for CONFIG"; }, 1500);
+  };
+  $("#tuneReset").onclick = () => { BURN = { ...CONFIG.burn }; setupTune(); renderDrawer(); };
+  $("#tuneRef").onchange = e => {
+    const f = e.target.files[0], im = $("#tuneRefImg"); if (!f) return;
+    if (im.src) URL.revokeObjectURL(im.src);
+    im.src = URL.createObjectURL(f); im.hidden = false;
+  };
+}
+setupTune();
+
+/* ---------- slider ---------- */
+function setupSlider() {
+  const r = $("#sizeRange"), ticks = $("#ticks");
+  ticks.innerHTML = "";
+  if (!hasLogo()) {
+    r.disabled = true; $("#sizeOut").textContent = "–"; $("#fitNote").textContent = "";
+    const chip = $("#sizeDpi"); chip.className = "dpi-chip info"; chip.textContent = S.file ? "No preview for this file" : "Add a file";
+    return;
+  }
+  const b = sliderBounds();
+  r.min = b.min; r.max = b.max; r.step = b.step; r.value = S.widthIn; r.disabled = false;
+  const span = b.max - b.min || 1;
+  const pct = x => Math.min(100, Math.max(0, (x - b.min) / span * 100));
+  if (S.pdf && !S.pdf.hasImage) { r.style.setProperty("--z1", "100%"); r.style.setProperty("--z2", "100%"); }
+  else if (S.pdf) { r.style.setProperty("--z1", "100%"); r.style.setProperty("--z2", "100%"); }
+  else {
+    r.style.setProperty("--z1", `${pct(origTrimW() / (CONFIG.idealDpi * 0.995))}%`);
+    r.style.setProperty("--z2", `${pct(origTrimW() / (CONFIG.minDpi * 0.995))}%`);
+  }
+  drawTicks();
+  updateSliderText();
+}
+function drawTicks() {
+  const ticks = $("#ticks"); ticks.innerHTML = "";
+  if (!hasLogo()) return;
+  const b = sliderBounds(), span = b.max - b.min || 1, wPx = ticks.clientWidth || 300;
+  const at = v => (v - b.min) / span * wPx, minGap = 38;
+  const vals = [b.min];
+  for (let i = Math.ceil(b.min); i <= Math.floor(b.max); i++) if (i !== b.min && i !== b.max) vals.push(i);
+  if (b.max !== b.min) vals.push(b.max);
+  const kept = [];
+  for (const v of vals) {
+    if (kept.length && at(v) - at(kept[kept.length - 1]) < minGap) {
+      if (v === b.max) kept.pop(); else continue;           // always keep the max label
+    }
+    kept.push(v);
+  }
+  for (const v of kept) {
+    const s = document.createElement("span"); s.textContent = frac(v); s.style.left = `${(v - b.min) / span * 100}%`;
+    ticks.appendChild(s);
+  }
+}
+new ResizeObserver(() => drawTicks()).observe($("#ticks"));
+function updateSliderText() {
+  if (!hasLogo()) return;
+  const w = S.widthIn, h = heightIn();
+  $("#sizeOut").textContent = `${frac(w)} × ${frac(h)}`;
+  const chip = $("#sizeDpi");
+  let txt, cls;
+  if (S.pdf) { txt = S.pdf.hasImage ? "PDF with image" : "Vector · any size"; cls = S.pdf.hasImage ? "note" : "pass"; }
+  else {
+    const d = effDpi();
+    cls = meets(d, CONFIG.idealDpi) ? "pass" : meets(d, CONFIG.minDpi) ? "note" : "fail";
+    txt = `${fmtInt(d)} DPI · ${cls === "pass" ? "ideal" : cls === "note" ? "acceptable" : "too low"}`;
+  }
+  chip.className = `dpi-chip ${cls}`; chip.textContent = txt;
+  $("#sizeRange").setAttribute("aria-valuetext", `${frac(w)} wide by ${frac(h)} tall, ${txt}`);
+  $("#fitNote").textContent = `On a ${CONFIG.drawerHeightIn}" drawer side, logos up to ${frac(maxFitHeightIn())} tall fit above the bottom groove. The slider moves in ${frac(CONFIG.sizeStepIn)} steps; arrow keys work too.`;
+}
+$("#sizeRange").addEventListener("input", e => setWidth(parseFloat(e.target.value)));
+
+function setWidth(w) {
+  if (!(w > 0)) return;
+  S.widthIn = w;
+  updateSliderText(); buildChecks(); renderChecks(); renderDrawer();
+}
+
+/* ---------- proof rendering (on screen) ---------- */
+function diagramPlacement(w, h) {                          // in diagram inches (before any shrink)
+  const D = CONFIG.diagram;
+  return { x: D.frontEdgeIn - D.fromFrontIn * D.scale - w * D.scale, y: D.topEdgeIn + D.fromTopIn * D.scale, w: w * D.scale, h: h * D.scale };
+}
+function signatureState() {
+  return S.sig.drawn ? { kind: "drawn", dataUrl: trimmedSignature() } : null;
+}
+
+/* ---------- signature pad ---------- */
+const pad = $("#sigPad"), pctx = pad.getContext("2d");
+let strokesN = [], current = null;
+function sizePad() {
+  const r = pad.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  if (!r.width) return;
+  pad.width = Math.round(r.width * dpr); pad.height = Math.round(r.height * dpr);
+  redrawPad();
+}
+function redrawPad() {
+  const rr = pad.getBoundingClientRect(), dpr = pad.width / (rr.width || 1);
+  pctx.setTransform(1, 0, 0, 1, 0, 0); pctx.clearRect(0, 0, pad.width, pad.height);
+  pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const strokes = toPx(rr);
+  pctx.lineCap = "round"; pctx.lineJoin = "round"; pctx.strokeStyle = "#0b1d4a"; pctx.lineWidth = 2.2;
+  for (const s of strokes) {
+    if (s.length === 1) { pctx.beginPath(); pctx.arc(s[0].x, s[0].y, 1.2, 0, Math.PI * 2); pctx.fillStyle = "#0b1d4a"; pctx.fill(); continue; }
+    pctx.beginPath(); pctx.moveTo(s[0].x, s[0].y);
+    for (let i = 1; i < s.length - 1; i++) { const mx = (s[i].x + s[i + 1].x) / 2, my = (s[i].y + s[i + 1].y) / 2; pctx.quadraticCurveTo(s[i].x, s[i].y, mx, my); }
+    const l = s[s.length - 1]; pctx.lineTo(l.x, l.y); pctx.stroke();
+  }
+}
+// points are stored in the pad size they were drawn at; if the pad resizes (phone rotated), scale uniformly so the signature keeps its shape
+let sigRef = null;
+const sigK = r => (sigRef ? Math.min(r.width / sigRef.w, r.height / sigRef.h) : 1);
+const ptOf = e => { const r = pad.getBoundingClientRect(); if (!sigRef) sigRef = { w: r.width, h: r.height }; const k = sigK(r); return { x: (e.clientX - r.left) / k, y: (e.clientY - r.top) / k }; };
+const toPx = r => { const k = sigK(r); return strokesN.map(s => s.map(p => ({ x: p.x * k, y: p.y * k }))); };
+pad.addEventListener("pointerdown", e => { e.preventDefault(); pad.setPointerCapture(e.pointerId); current = [ptOf(e)]; strokesN.push(current); redrawPad(); });
+pad.addEventListener("pointermove", e => { if (!current) return; current.push(ptOf(e)); redrawPad(); });
+const endStroke = () => { if (!current) return;
+  current = null; S.sig.drawn = strokesN.length > 0; pad.removeAttribute("aria-invalid"); };
+pad.addEventListener("pointerup", endStroke); pad.addEventListener("pointercancel", endStroke);
+$("#sigClear").addEventListener("click", () => { strokesN = []; sigRef = null; S.sig.drawn = false; redrawPad(); });
+new ResizeObserver(sizePad).observe(pad);
+function trimmedSignature() {                              // PNG of just the ink, transparent background
+  const strokes = toPx(pad.getBoundingClientRect());
+  const xs = strokes.flat(); if (!xs.length) return null;
+  const pad2 = 4, x0 = Math.min(...xs.map(p => p.x)) - pad2, y0 = Math.min(...xs.map(p => p.y)) - pad2;
+  const x1 = Math.max(...xs.map(p => p.x)) + pad2, y1 = Math.max(...xs.map(p => p.y)) + pad2;
+  const k = 3, c = document.createElement("canvas");
+  c.width = Math.max(1, Math.round((x1 - x0) * k)); c.height = Math.max(1, Math.round((y1 - y0) * k));
+  const g = c.getContext("2d"); g.scale(k, k); g.translate(-x0, -y0);
+  g.lineCap = "round"; g.lineJoin = "round"; g.strokeStyle = "#0b1d4a"; g.fillStyle = "#0b1d4a"; g.lineWidth = 2.2;
+  for (const s of strokes) {
+    if (s.length === 1) { g.beginPath(); g.arc(s[0].x, s[0].y, 1.2, 0, Math.PI * 2); g.fill(); continue; }
+    g.beginPath(); g.moveTo(s[0].x, s[0].y);
+    for (let i = 1; i < s.length - 1; i++) { const mx = (s[i].x + s[i + 1].x) / 2, my = (s[i].y + s[i + 1].y) / 2; g.quadraticCurveTo(s[i].x, s[i].y, mx, my); }
+    const l = s[s.length - 1]; g.lineTo(l.x, l.y); g.stroke();
+  }
+  return c.toDataURL("image/png");
+}
+
+/* ---------- phone layout: upload, size it, check, proof, then sign ---------- */
+const MOBILE = matchMedia("(max-width: 960px)");
+const panelEl = document.querySelector(".panel"), deskEl = document.querySelector(".desk");
+const panelKids = [...panelEl.children], deskKids = [...deskEl.children];
+const stepOf = id => document.querySelector(`section[aria-labelledby="${id}"]`);
+function applyFlow() {
+  const flow = $("#mobileFlow");
+  if (MOBILE.matches) {
+    [stepOf("s1"), document.querySelector(".stage"), stepOf("s2"), stepOf("s3")]
+      .forEach(el => flow.appendChild(el));
+    flow.hidden = false; panelEl.hidden = true; deskEl.hidden = true;
+  } else {
+    panelKids.forEach(el => panelEl.appendChild(el));
+    deskKids.forEach(el => deskEl.appendChild(el));
+    flow.hidden = true; panelEl.hidden = false; deskEl.hidden = false;
+  }
+  renderDrawer(); drawTicks();
+  if (TS.widget !== null) renderTurnstile();
+}
+MOBILE.addEventListener("change", applyFlow);
+
+/* ---------- signed PDF (built in the browser, logo placed at true size) ---------- */
+// The proof template's drawer diagram, built in so the PDF never depends on a separate file being uploaded.
+const DIAGRAM_SRC = "data:image/png;base64,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EgAAABEJAACAiAQAAEBEAgAAICIBAABARAIAACAiAQAAEJEAAACISAAAAEQkAAAAIhIAAAARCQAAACISAAAAEQkAAICIBAAAQEQCAAAgIgEAABCRAAAAICIBAAAQkQAAAIhIAAAARCQAAAAiEgAAABEJAAAAIhIAAAARCQAAgIgEAABARAIAACAiAQAAEJEAAACISAAAABCRAAAAiEgAAABEJAAAACISAAAAEQkAAICIBAAAABEJAACAiAQAAEBEAgAACyhFZQiISAAAYH6avMoQWBAtIwAAgKGXov5Q+5BT/s/YGrNARAIAAHuRm/qDkZ4zd+hhmw990w9HV5sIIhIAANitFP2RVP1o5I47ItZVrXOX9962Iq0wF0QkAACwC03OdaRirihS/XDERREXtct3TKSzXvDgQTu32bTSnBCRAABARESOFDlH00SkiDLl2dn404iLxrYceszmV/7y9PMiNCQiEgAAeDQj2zk3ETlHVBEp2p0mut3mvvsiPX/qJcdOvuxNPxpxCVdEJAAAEBGxfHM/IiLKIjdNpJyauo52ndvt3P8/rfvui1iTO2cuzW9/vlkhIgEAYHFLnfa319+65Du3L+lvqiPa0YmmqHLqV52626ToFWX0N0R8JOLD7fbbl6SzVta+DQQRCQAAi/eTf/tVr4p4sIwrt8TFVesfIpblufZY08tlzvGYxZIzUfxpxIcmZg49asOrTv7/fsLoEJEAALD4NDmmVsRBEe+NePd0+uLGdOXWlQ9tiUg5Wql5zGLJsoh2a2bb6AN3RTx39heO3vyKk39crt3+JOaIiAQAgEUhRazYeXvlyrgw4gMbV99998R37y42VRERURa5zinnpm7351JZLWk3cz8s77034sBu5+xl9TtG1o6ZIyISAAAWh/yke1bHkUdGRNx119Lv3jHWTNYRrXq0SP1qpKhzsynlFFVRFP0fRXwk4qLR5T+RaoMUkUYAAACL2+tfH/Fgii+s71y2uf3jiCirJf0m5xyPXyzZ2/S/ShGJiAQAAOKgiPdEvLPOl3V7V862Ht7+dSCP+2bJVqso5iIiimReIhIAACDWRPzziH+7Yc19dy/57h1p5zdLlnUTEdVYr5/LOorpyqREJAAAwKMtedhhEZtW3nvXxHfubMdkHamoR6OXW0v6eWTza/+pEYlIAACAx1sZhx8e8WCZr97cXNXt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";
+function imgToJpeg(src, maxW, maxH) {
+  return new Promise((res, rej) => {
+    const im = new Image();
+    im.onload = () => {
+      const k = Math.min(1, maxW / im.naturalWidth, maxH / im.naturalHeight);
+      const c = document.createElement("canvas"); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+      const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
+      g.imageSmoothingQuality = "high"; g.drawImage(im, 0, 0, c.width, c.height);
+      res({ data: c.toDataURL("image/jpeg", 0.92), w: c.width, h: c.height });
+    };
+    im.onerror = () => rej(new Error("Couldn’t load an image for the PDF"));
+    im.src = src;
+  });
+}
+function richLines(doc, segs, maxW, size) {               // word-wrap text that mixes bold and regular
+  const words = [];
+  for (const s of segs) {
+    for (const part of s.text.split(/(\n| )/)) { if (part === " " || part === "") continue; words.push({ text: part, bold: s.bold }); }
+  }
+  const width = wd => { doc.setFont("times", wd.bold ? "bold" : "normal"); doc.setFontSize(size); return doc.getTextWidth(wd.text); };
+  const space = () => { doc.setFont("times", "normal"); doc.setFontSize(size); return doc.getTextWidth(" "); };
+  const lines = []; let line = [], lw = 0;
+  for (const wd of words) {
+    if (wd.text === "\n") { lines.push(line); line = []; lw = 0; continue; }
+    const ww = width(wd), add = line.length ? space() + ww : ww;
+    if (line.length && lw + add > maxW) { lines.push(line); line = [wd]; lw = ww; }
+    else { line.push(wd); lw += add; }
+  }
+  if (line.length) lines.push(line);
+  return lines;
+}
+function drawRich(doc, lines, x, y, size, lh) {
+  doc.setFontSize(size);
+  for (const line of lines) {
+    let cx = x;
+    for (let i = 0; i < line.length; i++) {
+      const wd = line[i]; doc.setFont("times", wd.bold ? "bold" : "normal");
+      doc.text(wd.text, cx, y, { baseline: "alphabetic" });
+      cx += doc.getTextWidth(wd.text) + (i < line.length - 1 ? (doc.setFont("times", "normal"), doc.getTextWidth(" ")) : 0);
+    }
+    y += lh;
+  }
+  return y;
+}
+async function buildPdf() {
+  await loadScript(CONFIG.libs.jspdf);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "in", format: "letter", compress: true });
+  const W = 8.5, Lx = 0.45, Rx = 8.05, T = 0.4, B = 10.7, cx0 = Lx + 0.22, cx1 = Rx - 0.22, cw = cx1 - cx0, mid = W / 2;
+  const pt = v => v / 72, lh12 = pt(12) * 1.2, lh115 = pt(11.5) * 1.2;
+  const w = S.widthIn, h = heightIn(), date = todayStr();
+  const co = $("#company").value.trim(), no = $("#custNo").value.trim();
+  const sig = signatureState(), name = $("#contact").value.trim();
+
+  const [ks, dia] = await Promise.all([imgToJpeg($("#brandLogo").src, 720, 720), imgToJpeg(DIAGRAM_SRC, 4000, 4000)]);
+  const maxPx = Math.round(w * CONFIG.idealDpi);             // cap the proof image at 1200 ppi
+  const lg = await imgToJpeg(S.engraveUrl, maxPx, maxPx * 4);
+
+  // ---- measure the variable parts
+  const p1 = richLines(doc, [{ text: "The default position for Drawers", bold: true }, { text: " is on the inside of the drawer box side close to the front of the drawer on the right (About 3 inches from the front of the drawer side and about 1/2 inch down from the top).\nBased on size limitations the exact location may vary.", bold: false }], cw, 12);
+  const p2 = richLines(doc, [{ text: "Please indicate if you want your engraving positioned differently.  This default position will be used unless otherwise specified.", bold: false }], cw, 12);
+  const pd = richLines(doc, [{ text: "The default position for logos engraved on Doors", bold: true }, { text: " is on the back, centered on the top rail. Please indicate if you want your engraving positioned differently.  This default position will be used unless otherwise specified.", bold: false }], cw, 12);
+  const pb = richLines(doc, [{ text: "Please sign and date your approval below and fax it back to (717) 299-9654 or e-mail it to info@keystonewood.com.  If the proof is not approved, call, e-mail or fax further instructions to Keystone Customer Service", bold: false }], Rx - Lx, 11.5);
+
+  const bottomH = 0.25 + 0.2 + 0.62 + 0.17 + 0.3 + 0.12 + 0.18;
+  const yBT = B - bottomH;                                    // bottom box top
+  const yTB = yBT - (pb.length * lh115 + 0.14);              // top box bottom
+  const headH = 0.873 + 0.2;
+  const fixed = headH + p1.length * lh12 + 0.11 + p2.length * lh12 + 0.11 + 0.16 + lh12 + 0.12 + h + 0.24 + 0.12 + pd.length * lh12;
+  const avail = yTB - T - 0.5;
+  let dk = 1;
+  if (fixed + CONFIG.diagram.heightIn > avail) dk = Math.max(0.5, (avail - fixed) / CONFIG.diagram.heightIn);
+  const overflow = fixed + CONFIG.diagram.heightIn * dk > avail + 1e-3;
+
+  // ---- top box
+  const lw = pt(2.5); doc.setLineWidth(lw); doc.setDrawColor(0);
+  doc.addImage(ks.data, "JPEG", cx0, T + 0.25, 1.62, 1.62 * ks.h / ks.w, "ks");
+  doc.setFont("times", "bold"); doc.setFontSize(18); doc.text("Laser Engraving Proof", mid, T + 0.25 + 0.3, { align: "center" });
+  doc.setFontSize(14); doc.text([no, co].filter(Boolean).join(" \u2014 "), mid, T + 0.25 + 0.55, { align: "center" });
+  doc.setFont("times", "normal"); doc.setFontSize(10);
+  doc.text("PROOF # 1", cx1, T + 0.25 + 0.12, { align: "right" }); doc.text(date, cx1, T + 0.25 + 0.28, { align: "right" });
+
+  let y = T + 0.25 + headH + pt(12);
+  y = drawRich(doc, p1, cx0, y, 12, lh12) + 0.11;
+  y = drawRich(doc, p2, cx0, y, 12, lh12) + 0.11 - pt(12) + 0.06;
+  const dW = CONFIG.diagram.widthIn * dk, dH = CONFIG.diagram.heightIn * dk, dx = mid - dW / 2;
+  doc.addImage(dia.data, "JPEG", dx, y, dW, dH, "dia");
+  const P = diagramPlacement(w, h);
+  doc.addImage(lg.data, "JPEG", dx + P.x * dk, y + P.y * dk, P.w * dk, P.h * dk, "logo");
+  y += dH + 0.1 + pt(12);
+  doc.setFont("times", "normal"); doc.setFontSize(12);
+  doc.text("Your laser engraved image would be as shown below at full size.", mid, y, { align: "center" });
+  y += 0.12 + 0.06;
+  doc.addImage(lg.data, "JPEG", mid - w / 2, y, w, h, "logo");   // TRUE SIZE
+  y += h + 0.06 + pt(9);
+  doc.setFontSize(9); doc.text(`Engraved size ${frac(w)} wide \u00d7 ${frac(h)} tall (${fmt2(w)} \u00d7 ${fmt2(h)} in)`, mid, y, { align: "center" });
+  y += 0.15;
+  let topBottom = overflow ? y + pd.length * lh12 + 0.35 : yTB;
+  const doorY = overflow ? y + pt(12) + 0.08 : topBottom - 0.25 - pd.length * lh12 + pt(12) - 0.04;
+  drawRich(doc, pd, cx0, doorY, 12, lh12);
+  doc.rect(Lx, T, Rx - Lx, topBottom - T);
+
+  // ---- bottom section (new page only if a huge logo didn't fit)
+  let yb = topBottom + 0.08 + pt(11.5);
+  let boxTop = yBT;
+  if (overflow) { doc.addPage(); yb = T + pt(11.5); boxTop = yb + pb.length * lh115 + 0.02; }
+  drawRich(doc, pb, Lx, yb, 11.5, lh115);
+  const boxBottom = boxTop + bottomH;
+  doc.rect(Lx, boxTop, Rx - Lx, bottomH);
+  let by = boxTop + 0.25 + pt(11.5);
+  doc.setFont("times", "normal"); doc.setFontSize(11.5); doc.text("Phone: (800) 233-0289      Fax: (717) 299-9654", cx0, by);
+  const sy = by + 0.62;                                       // signature line
+  doc.setFontSize(14); doc.text("Proof is Approved", cx0, sy - 0.03);
+  const sx0 = cx0 + 1.9, sx1 = cx1 - 1.85, dx0 = cx1 - 1.6;
+  doc.setLineWidth(pt(0.75)); doc.line(sx0, sy, sx1, sy); doc.line(dx0, sy, cx1, sy);
+  if (sig?.kind === "drawn" && sig.dataUrl) {
+    const im = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.src = sig.dataUrl; });
+    const maxH = 0.45, maxWd = sx1 - sx0 - 0.2, k = Math.min(maxH / im.naturalHeight, maxWd / im.naturalWidth);
+    const iw = im.naturalWidth * k, ih = im.naturalHeight * k;
+    doc.addImage(sig.dataUrl, "PNG", (sx0 + sx1) / 2 - iw / 2, sy - ih + 0.02, iw, ih, "sig");
+  }
+  if (sig) { doc.setFont("times", "italic"); doc.setFontSize(14); doc.text(date, (dx0 + cx1) / 2, sy - 0.07, { align: "center" }); }
+  doc.setFont("times", "normal"); doc.setFontSize(9);
+  doc.text(sig && name ? `Signature (${name})` : "Signature", (sx0 + sx1) / 2, sy + 0.15, { align: "center" });
+  doc.text("Date", (dx0 + cx1) / 2, sy + 0.15, { align: "center" });
+  doc.setFontSize(11.5); doc.text("A signature and date are required in order to proceed.", cx0, sy + 0.15 + 0.3);
+  doc.setFontSize(8); doc.setTextColor(85);
+  doc.text(`File: ${S.file.name}${sig ? `  \u00b7  Signed electronically ${new Date().toLocaleString("en-US")}` : ""}`, cx1, boxBottom - 0.12, { align: "right" });
+  doc.setTextColor(0);
+  doc.setProperties({ title: `Laser Engraving Proof${co ? " - " + co : ""}`, subject: "Logo engraving proof", author: name || co, creator: "Keystone Wood Specialties logo proof" });
+  return doc.output("blob");
+}
+function pdfName() {
+  const co = $("#company").value.trim(), no = $("#custNo").value.trim();
+  const base = ["Keystone logo proof", no, co].filter(Boolean).join(" - ").replace(/[\\/:*?"<>|]+/g, " ");
+  return `${base} - ${todayStr()}.pdf`;
+}
+
+
+/* ---------- load a file ---------- */
+async function runAnalysis(includeAll) {
+  if (S.engraveUrl) URL.revokeObjectURL(S.engraveUrl);
+  S.engraveUrl = null; S.engraveBlob = null;
+  S.a = analyze(S.dec.rgba, S.dec.w, S.dec.h, includeAll);
+  if (!S.a.blank) {
+    S.aspect = S.a.th / S.a.tw;
+    S.engraveBlob = await makeEngravePng(S.a);
+    S.engraveUrl = URL.createObjectURL(S.engraveBlob);
+  }
+}
+async function handleFile(file) {
+  if (!file) return;
+  if (S.engraveUrl) URL.revokeObjectURL(S.engraveUrl);
+  Object.assign(S, { file, kind: null, fileDpi: null, srcW: 0, srcH: 0, scale: 1, dec: null, a: null, pdf: null, widthIn: null, engraveBlob: null, engraveUrl: null });
+  $("#facts").hidden = true; $("#thumbFig").hidden = true; $("#keepMarksRow").hidden = true; $("#keepMarks").checked = false;
+  $("#sendErr").textContent = "";
+
+  if (file.size > CONFIG.maxUploadMB * 1048576) {
+    S.kind = "unknown"; S.checks = [{ status: "fail", title: "File is too large to send", detail: `The limit is ${CONFIG.maxUploadMB} MB. Save a flattened copy, or email it to info@keystonewood.com.` }];
+    renderChecks(); setupSlider(); renderDrawer(); return;
+  }
+  busy("Checking your file…"); await nextFrame();
+  try {
+    const buf = await file.arrayBuffer();
+    const head = new Uint8Array(buf, 0, Math.min(buf.byteLength, 4096));
+    S.kind = sniff(head, file.name);
+    let dec = null;
+    if (S.kind === "png") { S.fileDpi = pngDpi(new Uint8Array(buf)); dec = await decodeRaster(file); }
+    else if (S.kind === "jpg") { S.fileDpi = jpegDpi(new Uint8Array(buf)); dec = await decodeRaster(file); }
+    else if (["gif", "webp", "bmp"].includes(S.kind)) { dec = await decodeRaster(file); }
+    else if (S.kind === "tif") { busy("Reading TIF…"); dec = await decodeTiff(buf); }
+    else if (S.kind === "pdf") { busy("Rendering PDF…"); dec = await decodePdf(buf); S.pdf = { hasImage: dec.hasImage, renderDpi: dec.dpi }; }
+    if (dec) {
+      S.scale = dec.s; S.dec = dec; if (S.pdf) { S.srcW = dec.w; S.srcH = dec.h; }
+      busy("Finding the logo and measuring detail…"); await nextFrame();
+      await runAnalysis(false);
+      if (!S.a.blank) { const d = defaultSize(); S.widthIn = d.w; S.sizeSource = d.src; }
+    }
+    renderFacts();
+  } catch (err) {
+    console.error(err);
+    S.a = null;
+    S.checks = [{ status: "fail", title: "Couldn’t read this file", detail: `${err.message || err}. Try exporting it again as PNG or TIF.` }];
+    busy(""); renderChecks(); setupSlider(); renderDrawer(); return;
+  }
+  busy("");
+  await drawThumb();
+  phoneDefaultView();
+  setupSlider(); buildChecks(); renderChecks(); renderDrawer();
+}
+$("#keepMarks").addEventListener("change", async e => {
+  if (!S.dec) return;
+  busy("Re-measuring…"); await nextFrame();
+  await runAnalysis(e.target.checked);
+  busy("");
+  if (!S.a.blank) S.widthIn = snap(S.widthIn);
+  renderFacts(); await drawThumb(); setupSlider(); buildChecks(); renderChecks(); renderDrawer();
+});
+
+function renderFacts() {
+  const f = $("#facts"), rows = [];
+  rows.push(["File", S.file.name]);
+  rows.push(["Type", `${KIND_LABEL[S.kind]} · ${(S.file.size / 1048576).toFixed(2)} MB`]);
+  if (S.pdf) { if (S.a && !S.a.blank) rows.push(["Artwork", `${fmt2(S.a.tw / S.pdf.renderDpi)} × ${fmt2(S.a.th / S.pdf.renderDpi)} in on the page`]); }
+  else if (S.srcW) {
+    rows.push(["File pixels", `${fmtInt(S.srcW)} × ${fmtInt(S.srcH)}`]);
+    if (S.a && !S.a.blank) rows.push(["Logo pixels", `${fmtInt(S.a.tw / S.scale)} × ${fmtInt(S.a.th / S.scale)}`]);
+    rows.push(["Saved DPI", S.fileDpi ? fmtInt(S.fileDpi.x) : "not set"]);
+  }
+  if (S.sizeSource && S.a && !S.a.blank) rows.push(["Starting size", S.sizeSource]);
+  f.innerHTML = rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("");
+  f.hidden = false;
+}
+
+/* ---------- events ---------- */
+$("#file").addEventListener("change", e => handleFile(e.target.files[0]));
+const drop = $("#drop");
+["dragenter", "dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("is-over"); }));
+["dragleave", "drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("is-over"); }));
+drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) handleFile(f); });
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", e => { if (!drop.contains(e.target)) { e.preventDefault(); const f = e.dataTransfer?.files[0]; if (f) handleFile(f); } });
+
+
+/* ---------- customer number: digits only (typing, pasting, autofill) ---------- */
+$("#custNo").addEventListener("input", e => {
+  const el = e.target, v = el.value;
+  if (/^\d*$/.test(v)) return;
+  const pos = el.selectionStart ?? v.length;
+  const before = v.slice(0, pos).replace(/\D/g, "");
+  el.value = v.replace(/\D/g, "").slice(0, 20);
+  el.setSelectionRange(before.length, before.length);
+});
+
+/* ---------- Cloudflare Turnstile bot check ---------- */
+const TS = { siteKey: "", widget: null, token: null };
+function renderTurnstile() {
+  if (!TS.siteKey || !window.turnstile) return;
+  if (TS.widget !== null) { try { turnstile.remove(TS.widget); } catch {} }
+  TS.token = null;
+  TS.widget = turnstile.render("#turnstile", {
+    sitekey: TS.siteKey,
+    action: "logo-proof",
+    theme: "auto",
+    size: "flexible",
+    callback: token => { TS.token = token; $("#botHint").textContent = ""; if (/security check/i.test($("#sendErr").textContent)) $("#sendErr").textContent = ""; },
+    "expired-callback": () => { TS.token = null; },
+    "error-callback": () => { TS.token = null; $("#botHint").textContent = "The security check couldn’t load. Refresh the page and try again."; },
+  });
+}
+async function setupTurnstile() {
+  try { const r = await fetch("/api/config", { cache: "no-store" }); TS.siteKey = (await r.json()).turnstileSiteKey || ""; } catch {}
+  if (!TS.siteKey) { $("#botHint").textContent = "The security check isn’t set up yet."; return; }
+  try {
+    await loadScript("https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit");
+    $("#botHint").textContent = "";
+    renderTurnstile();
+  } catch { $("#botHint").textContent = "The security check couldn’t load. Check your connection, or turn off content blockers for this page."; }
+}
+function resetTurnstile() {
+  TS.token = null;
+  if (TS.widget !== null && window.turnstile) { try { turnstile.reset(TS.widget); } catch {} }
+}
+
+/* ---------- send ---------- */
+const sendLabel = () => (S.lowRes && !S.blocked ? "Approve and send anyway" : "Approve and send");
+$("#sendForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const form = e.currentTarget, err = $("#sendErr");
+  err.textContent = "";
+  if (!hasLogo()) { err.textContent = "Add your logo file first."; $("#file").focus(); return; }
+  if (S.blocked) { err.textContent = "Fix the item marked ✕ in the quality check before sending."; return; }
+  const MSG = { company: "Enter your company name.", custNo: "Enter your Keystone customer number (numbers only).", contact: "Enter your name." };
+  if (!form.checkValidity()) {
+    const bad = form.querySelector(":invalid");
+    err.textContent = MSG[bad?.id] || bad?.validationMessage || "Fill in the required fields.";
+    bad?.focus(); form.reportValidity(); return;
+  }
+  if (!signatureState()) {
+    err.textContent = "Sign in the box to approve the proof.";
+    pad.setAttribute("aria-invalid", "true"); pad.scrollIntoView({ block: "center", behavior: "smooth" }); return;
+  }
+  if (!TS.token) {
+    err.textContent = TS.siteKey ? "Complete the security check, then send again." : "The security check isn’t available, so the form can’t be sent right now.";
+    $("#botField").scrollIntoView({ block: "center", behavior: "smooth" }); return;
+  }
+  const btn = $("#sendBtn"); btn.disabled = true; btn.textContent = "Sending…";
+  try {
+    const pdf = await buildPdf();
+    if (pdf.size + S.file.size > 18 * 1048576) throw new Error("the proof and logo file together are too large to email");
+    const fd = new FormData(form);
+    const meta = {
+      company: fd.get("company"), customerNumber: fd.get("customerNumber"), contact: fd.get("contact"),
+      website: fd.get("website"),
+      fileName: S.file.name, fileType: KIND_LABEL[S.kind], fileBytes: S.file.size,
+      pixelWidth: S.srcW || null, pixelHeight: S.srcH || null,
+      logoPixelWidth: Math.round(S.a.tw / S.scale), logoPixelHeight: Math.round(S.a.th / S.scale),
+      paddingTrimmedPct: Math.round(S.a.padFrac * 100),
+      fileDpi: S.fileDpi ? Math.round(S.fileDpi.x) : null,
+      widthIn: +S.widthIn.toFixed(4), heightIn: +heightIn().toFixed(4),
+      widthFrac: frac(S.widthIn), heightFrac: frac(heightIn()),
+      effectiveDpi: S.pdf ? null : Math.round(effDpi()), vector: S.pdf ? !S.pdf.hasImage : false,
+      verdict: S.verdict, lowRes: !!S.lowRes, checks: S.checks, proofDate: todayStr(),
+    };
+    const body = new FormData();
+    body.append("meta", JSON.stringify(meta));
+    body.append("proof", pdf, pdfName());
+    body.append("file", S.file, S.file.name);
+    body.append("turnstileToken", TS.token);
+    const r = await fetch(form.action, { method: "POST", body });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.ok) throw new Error(j.error || `server responded ${r.status}`);
+    resetTurnstile();
+    $("#sentDialog").showModal();
+    btn.textContent = "Sent";
+  } catch (ex) {
+    console.error(ex);
+    err.textContent = `Couldn’t send: ${ex.message}. Try again, or email your logo file to info@keystonewood.com.`;
+    resetTurnstile();
+    btn.disabled = false; btn.textContent = sendLabel();
+  }
+});
+
+renderDrawer(); renderChecks(); applyFlow(); setupTurnstile();
+</script>
+</body>
+</html>
