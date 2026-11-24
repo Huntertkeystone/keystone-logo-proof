@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drawer box configurator – Keystone Wood Specialties</title>
+<link rel="stylesheet" href="../../shared/fonts.css">
+<link rel="stylesheet" href="../../shared/order-basket.css?v=2026.10.29-order-feedback">
+<style>
+/* the drawer box configurator, on the SQL catalog: Bee-Line and Arrow-Line boxes, their options, rules and prices all come
+   from the catalog (the same look as the door configurator) */
+:root {
+  --bg: #E6E9E5; --panel: #F5F6F3; --ink: #1E2A2E; --muted: #5A676B; --line: #CDD3D0; --field: #FFFFFF;
+  --accent: #E3B23C; --accent-ink: #2B2207; --blue: #2F5D7C; --warn: #9A3B1E; --ok: #2E7D6B; --plan-bg: #EEF0EB;
+  color-scheme: light; box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #182124; --panel: #232D31; --ink: #F1F5F4; --muted: #B5C0C3; --line: #44524F; --field: #2D393D;
+    --accent: #E8BC4E; --accent-ink: #231B04; --blue: #86B6D8; --warn: #F0997B; --ok: #6FD3B8; --plan-bg: #1B2427; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] { --bg: #182124; --panel: #232D31; --ink: #F1F5F4; --muted: #B5C0C3; --line: #44524F; --field: #2D393D; --accent: #E8BC4E; --accent-ink: #231B04; --blue: #86B6D8; --warn: #F0997B; --ok: #6FD3B8; --plan-bg: #1B2427; color-scheme: dark; }
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body { height: 100%; margin: 0; background: var(--bg); color: var(--ink); font-family: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif; font-size: 15px; line-height: 1.45;
+  display: grid; grid-template-columns: minmax(320px, 400px) 1fr; }
+@media (max-width: 820px) { body { grid-template-columns: 1fr; height: auto; } }
+[hidden] { display: none !important; }
+.panel { background: var(--panel); border-right: 1px solid var(--line); overflow-y: auto; min-height: 0; padding: 22px 22px 48px; }
+.stage { overflow-y: auto; min-height: 0; padding: 22px 26px 48px; background: var(--plan-bg); display: flex; flex-direction: column; gap: 16px; }
+header h1 { font-size: 1.6rem; line-height: 1.1; font-weight: 720; margin: 0; letter-spacing: -0.01em; }
+header p { margin: 4px 0 0; color: var(--muted); font-size: .9rem; }
+.staff { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: color-mix(in srgb, var(--accent) 22%, var(--field)); color: var(--ink); font-size: .85rem; }
+section { padding: 16px 0 12px; border-top: 1px solid var(--line); margin-top: 14px; }
+section h2 { font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+label.field { display: flex; flex-direction: column; gap: 4px; font-size: .84rem; color: var(--muted); }
+label.field.wide { grid-column: 1 / -1; }
+input, select { font: inherit; font-size: .95rem; color: var(--ink); background: var(--field); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; min-width: 0; width: 100%; }
+input[type="checkbox"] { width: auto; }
+input[type="range"] { padding: 0; }
+.check { display: flex; gap: 8px; align-items: center; color: var(--ink); font-size: .92rem; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+/* door styles as icons */
+.styletiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.styletile { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 6px 7px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: inherit; font: inherit; cursor: pointer; }
+.styletile:hover { border-color: currentColor; } .styletile.on { border-color: var(--accent, #2f6fdb); box-shadow: 0 0 0 2px var(--accent, #2f6fdb) inset; }
+.styleicon { display: block; width: 100%; height: 86px; } .styleicon svg { width: 100%; height: 100%; }
+.stylename { font-size: 12px; line-height: 1.25; text-align: center; overflow-wrap: anywhere; }
+.stylegroup { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; opacity: .7; margin: 10px 0 6px; }
+.stylefind { width: 100%; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; background: var(--panel); color: inherit; font: inherit; }
+/* the door and its edge section side by side, as in the planner's cabinet step; stacked when there isn't room */
+.views { display: grid; grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr); gap: 14px; align-items: start; }
+.views .section .drawing svg { max-width: 100%; height: auto; }
+@media (max-width: 1100px) { .views { grid-template-columns: 1fr; } }
+.drawing { display: flex; justify-content: center; align-items: center; min-height: 360px; }
+.drawing svg { max-width: 100%; max-height: 62vh; height: auto; }
+.price { display: flex; gap: 18px; align-items: baseline; flex-wrap: wrap; }
+.price .big { font-size: 1.9rem; font-weight: 720; }
+.msg { color: var(--warn); font-size: .9rem; margin: 4px 0 0; }
+.note { color: var(--muted); font-size: .84rem; margin: 6px 0 0; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { text-align: left; padding: 6px 8px; border-top: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: .8rem; }
+td.n { text-align: right; font-variant-numeric: tabular-nums; }
+.empty { color: var(--muted); }
+.drawing svg { color: var(--muted); }
+.box-note { color: var(--muted); font-size: .84rem; margin: 6px 0 0; text-align: center; }
+</style>
+</head>
+<body>
+<aside class="panel" aria-label="Choose your drawer box">
+  <header><h1>Drawer box configurator</h1><p>Keystone Wood Specialties</p><div class="staff" id="staffNote" hidden></div></header>
+  <div id="controls"><p class="note">Loading…</p></div>
+</aside>
+<main class="stage">
+  <div class="card"><div class="drawing" id="drawing"><span class="empty">Loading…</span></div><p class="box-note" id="drawNote"></p></div>
+  <div class="card"><div class="price" id="price"></div></div>
+  <div class="card"><h2 style="margin:0 0 6px;font-size:1rem">Parts</h2><div id="parts"></div></div>
+</main>
+<script src="../../shared/sql-looks.js?v=2026.10.28-four-layouts"></script>
+<script src="../../shared/box-drawing.js?v=2026.10.26f"></script>
+<script src="../../shared/sql-doors.js?v=2026.11.24-shown-in"></script>
+<script src="../../shared/order-basket.js?v=2026.10.29-order-feedback"></script>
+<script>
+(() => {
+  'use strict';
+  // the same picker as the door configurator and the kitchen planner (shared/sql-doors.js), set to drawer boxes
+  const $ = s => document.querySelector(s), esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const q = new URLSearchParams(location.search), staff = q.get('staff') === '1', money = v => Number(v).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  const missing = [['SqlDoors', 'shared/sql-doors.js'], ['BoxDrawing', 'shared/box-drawing.js']].filter(([g]) => typeof window[g] === 'undefined').map(([, f]) => f);
+  if (missing.length) { $('#controls').innerHTML = `<p class="msg">The drawer box configurator is missing ${esc(missing.join(', '))}. Upload ${missing.length === 1 ? 'that file' : 'those files'} to the site and reload.</p>`; $('#drawing').innerHTML = ''; return; }
+  const frac = SqlDoors.frac, toIn = SqlDoors.toIn;
+  const basket = KeystoneBasket.mount({ controls: $('#controls'), configurator: 'drawer_box', staff });
+  if (staff) { $('#staffNote').hidden = false; $('#staffNote').textContent = 'Staff preview: drawer boxes as they’re set up in the admin, drafts included, whether or not they’re Live. Customers don’t see this page this way.'; }
+  SqlDoors.create({ panel: $('#controls'), staff, onLoading: value => basket.loading(value), wanted: basket.wanted || q.get('product'), configurator: 'drawer_box', heading: 'Drawer box', iconFor: (p, dims) => BoxDrawing.icon(p, dims), onChange: st => {
+      basket.change(st);
+    if (!st.view) { $('#drawing').innerHTML = st.list && !st.list.length ? '<span class="empty">No drawer boxes are offered here yet.</span>' : ''; $('#price').innerHTML = ''; $('#parts').innerHTML = ''; $('#drawNote').textContent = ''; return; }
+    const r = st.price || {}, qty = Math.max(1, Math.round(Number(st.qty) || 1));
+    const w = toIn(st.dims.width) || 15, h = toIn(st.dims.height) || 6, d = toIn(st.dims.depth) || 21, corner = BoxDrawing.isCorner(st.product);
+    // the bottom chosen: none, 1/4" or 1/2" (drawn in its groove)
+    const botIt = (st.view.sections || []).flatMap(x => x.items).find(i => i.kind === 'option' && i.key === 'box_bottom');
+    const botName = botIt ? ((botIt.options || []).find(o => String(o.id) === String(st.sel.box_bottom ?? botIt.standard)) || {}).name || '' : '';
+    const bottom = /no bottom/i.test(botName) ? 0 : /1\/2/.test(botName) ? 0.5 : 0.25;
+    // a handle cut-out chosen (front, back, or both) is drawn in the box
+    const hk = Object.keys(st.attrs || {}).find(k => /handle.?cut/i.test(k)), cutout = hk ? st.attrs[hk] : null;
+    $('#drawing').innerHTML = BoxDrawing.views(w, h, d, { corner, bottom, cutout });
+    $('#drawNote').textContent = `${st.product.name}: outside sizes, width × height × depth${botName ? `; ${botName.toLowerCase()}` : ''}. A drawing to show the box; it's built to the parts list.`;
+    $('#price').innerHTML = !r.ok ? `<p class="msg">${esc(r.error || '')}</p>`
+      : r.status === 'priced' ? `<div><div class="note" style="margin:0">Each</div><div class="big">${money(r.unit_price)}</div></div><div><div class="note" style="margin:0">${qty} × each</div><div class="big">${money(Number(r.unit_price) * qty)}</div></div>`
+      : `<div><div class="big" style="font-size:1.2rem">${r.status === 'not_allowed' ? 'Can’t be made like this' : 'Not priced yet'}</div>${(r.messages || []).map(m => `<p class="msg">${esc(m)}</p>`).join('')}${r.note ? `<p class="note">${esc(r.note)}</p>` : ''}</div>`;
+    const ps = r.parts || [];
+    $('#parts').innerHTML = ps.length && ps.some(p => p.length != null) ? `<table><thead><tr><th>Part</th><th class="n">Qty</th><th class="n">Width</th><th class="n">Length</th><th class="n">Thickness</th></tr></thead><tbody>${ps.map(p => `<tr><td>${esc(p.name && p.name !== p.alias ? p.name : p.alias)}</td><td class="n">${esc(p.qty ?? '')}</td><td class="n">${p.width != null ? frac(p.width) : '—'}</td><td class="n">${p.length != null ? frac(p.length) : '—'}</td><td class="n">${p.thickness != null ? frac(p.thickness) : '—'}</td></tr>`).join('')}</tbody></table>`
+      : '<p class="empty">The parts list shows once the box can be worked out.</p>';
+  } });
+})();
+</script>
+</body>
+</html>
+
+
